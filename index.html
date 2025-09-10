@@ -3,24 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindSight Elite</title>
+    <title>MindSight Elite - Entrenamiento Mental Revolucionario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/png" href="https://i.imgur.com/aNReoxl.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; background: #1E3A8A; color: white; }
-        header { padding: 20px; }
-        h1 { font-size: 2.5em; }
-        p { font-size: 1.2em; }
-        .content { padding: 20px; }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            color: #333; 
+            background: #e9eef3 url('https://www.transparenttextures.com/patterns/wave.png') repeat; 
+            background-size: 200px; 
+            line-height: 1.6; 
+        }
+        header { 
+            background: #004080; 
+            color: white; 
+            padding: 10px 20px; 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 1000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+        header img { 
+            height: 40px; 
+            vertical-align: middle; 
+        }
+        nav ul { 
+            list-style: none; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            align-items: center; 
+        }
+        nav li { 
+            margin: 0 15px; 
+        }
+        nav a { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 16px; 
+            transition: color 0.3s; 
+        }
+        nav a:hover { 
+            color: #ff6600; 
+        }
+        .hamburger { 
+            display: none; 
+            font-size: 24px; 
+            cursor: pointer; 
+        }
+        #inicio.hero { 
+            background: linear-gradient(to right, #004080, #0066cc); 
+            color: white; 
+            text-align: center; 
+            padding: 120px 20px 60px; 
+            margin-top: 60px; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        #inicio.hero h1 { 
+            font-size: 3.5em; 
+            margin: 0 0 15px; 
+            font-weight: 700; 
+        }
+        #inicio.hero p { 
+            font-size: 1.3em; 
+            max-width: 800px; 
+            margin: 0 auto 20px; 
+        }
+        #inicio.hero img { 
+            width: 100%; 
+            max-width: 1200px; 
+            height: auto; 
+            margin-top: 20px; 
+            border-radius: 10px; 
+        }
+        #inicio.hero .cta { 
+            margin: 0 auto; 
+        }
+        #metodo { 
+            background: linear-gradient(to right, #e9eef3, #d1dfe7); 
+        }
+        #proceso { 
+            background: linear-gradient(to right, #d1dfe7, #e9eef3); 
+        }
+        #beneficios { 
+            background: linear-gradient(to right, #e9eef3, #d1dfe7); 
+        }
+        #creador { 
+            background: linear-gradient(to right, #d1dfe7, #e9eef3); 
+        }
+        #testimonios { 
+            background: linear-gradient(to right, #e9eef3, #d1dfe7); 
+        }
+        #faqs { 
+            background: linear-gradient(to right, #d1dfe7, #e9eef3); 
+        }
+        #contacto { 
+            background: linear-gradient(to right, #e9eef3, #d1dfe7); 
+        }
+        .cta { 
+            background: #ff6600; 
+            color: white; 
+            padding: 15px 30px; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            font-weight: 700; 
+            display: inline-block; 
+            transition: background 0.3s; 
+        }
+        .cta:hover { 
+            background: #e65100; 
+        }
+        section { 
+            padding: 80px 20px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            scroll-margin-top: 80px; 
+            display: flex; 
+            flex-wrap: wrap; 
+            align-items: flex-start; 
+            gap: 20px; 
+        }
+        .section-content { 
+            flex: 1; 
+            min-width: 0; 
+        }
+        .section-title { 
+            text-align: center; 
+            font-size: 2.5em; 
+            color: #004080; 
+            margin-bottom: 40px; 
+            font-weight: 700; 
+            width: 100%; 
+        }
+        .benefits { 
+            display: flex; 
+            justify-content: space-around; 
+            flex-wrap: wrap; 
+        }
+        .benefit { 
+            flex: 1; 
+            margin: 20px; 
+            text-align: center; 
+            max-width: 300px; 
+        }
+        .benefit i { 
+            font-size: 2.5em; 
+            color: #004080; 
+            margin-bottom: 15px; 
+        }
+        .benefit h3 { 
+            font-size: 1.5em; 
+            color: #004080; 
+            margin: 10px 0; 
+        }
+        .benefit p { 
+            font-size: 1em; 
+            color: #666; 
+        }
+        .process { 
+            background: #e6f2ff; 
+            padding: 40px; 
+            border-radius: 10px; 
+            margin: 20px 0; 
+        }
+        .process ol { 
+            font-size: 1.2em; 
+            padding-left: 20px; 
+        }
+        .faq { 
+            margin: 20px 0; 
+            padding: 15px; 
+            background: rgba(255, 255, 255, 0.8); 
+            border-radius: 10px; 
+            max-width: 100%; 
+        }
+        .faq h3 { 
+            color: #004080; 
+            font-size: 1.3em; 
+            font-weight: 700; 
+            margin-bottom: 10px; 
+        }
+        .contact-form { 
+            max-width: 500px; 
+            margin: 20px auto; 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+        }
+        .contact-form label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 600; 
+            color: #004080; 
+        }
+        .contact-form input, .contact-form textarea { 
+            width: 100%; 
+            padding: 10px; 
+            margin-bottom: 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            font-family: 'Montserrat', sans-serif; 
+        }
+        .contact-form textarea { 
+            height: 100px; 
+            resize: vertical; 
+        }
+        .section-image { 
+            max-width: 40%; 
+            height: auto; 
+            margin: 0 20px; 
+            border-radius: 10px; 
+            flex-shrink: 0; 
+        }
+        #contacto .section-image { 
+            max-width: 200px; 
+            margin: 0 auto 20px auto; 
+        }
+        @media (max-width: 768px) { 
+            .hamburger { display: block; }
+            nav ul { 
+                display: none; 
+                flex-direction: column; 
+                position: absolute; 
+                top: 60px; 
+                right: 20px; 
+                background: #004080; 
+                width: 150px; 
+                padding: 10px; 
+                border-radius: 5px; 
+            }
+            nav ul.active { display: flex; }
+            nav li { margin: 10px 0; }
+            header { flex-direction: column; align-items: flex-start; }
+            header img { margin: 10px 0; }
+            .hero { padding: 80px 20px 40px; }
+            .hero h1 { font-size: 2.5em; }
+            .hero p { font-size: 1.2em; }
+            .benefits { flex-direction: column; }
+            .benefit { max-width: 100%; }
+            .contact-form { padding: 15px; }
+            section { 
+                flex-direction: column; 
+                padding: 40px 20px; 
+            }
+            .section-content { 
+                order: 1; 
+                width: 100%; 
+            }
+            .section-image { 
+                order: 2; 
+                max-width: 100%; 
+                margin: 10px 0; 
+            }
+            #contacto .section-image { 
+                max-width: 150px; 
+                margin: 0 auto 20px auto; 
+            }
+            .faq { 
+                padding: 10px; 
+                margin: 10px 0; 
+            }
+        }
+        footer { 
+            background: #333; 
+            color: white; 
+            text-align: center; 
+            padding: 20px; 
+            margin-top: 40px; 
+        }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.queryselector('.hamburger');
+            const navUl = document.queryselector('nav ul');
+            hamburger.addEventListener('click', () => {
+                navUl.classList.toggle('active');
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
-        <h1>MindSight Elite</h1>
-        <p>Despierta tu Visión Mental y Domina el Juego</p>
+        <img src="https://i.imgur.com/aNReoxl.png" alt="MindSight Elite Logo" style="height: 40px;">
+        <span class="hamburger">&#9776;</span>
+        <nav>
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#metodo">Método</a></li>
+                <li><a href="#proceso">Proceso</a></li>
+                <li><a href="#beneficios">Beneficios</a></li>
+                <li><a href="#creador">Creador</a></li>
+                <li><a href="#testimonios">Testimonios</a></li>
+                <li><a href="#faqs">FAQs</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
     </header>
-    <div class="content">
-        <h2>Sobre Nosotros</h2>
-        <p>Entrenamiento mental con 10 sesiones para activar tu visión 360°, superar traumas y confiar en tu intuición.</p>
-        <p><a href="mailto:info@mindsightelite.com">Contáctanos</a></p>
-    </div>
+    <section id="inicio" class="hero">
+        <h1>MindSight Elite</h1>
+        <p>Fórmate en MindSight Elite, transforma tu rendimiento deportivo y lleva tu carrera al siguiente nivel. Ahora tienes la oportunidad de alcanzar tu máximo potencial. No pierdas más tiempo en métodos que no te llevan a ningún sitio. Alcanza resultados rápidos, sorprendentes y definitivos. Promueve tu autonomía, responsabilidad y liderazgo. Rodéate de un equipo cohesionado y relaciones constructivas. Amplía tus herramientas emocionales y domina el tiempo bajo presión.</p>
+        <img src="https://i.imgur.com/RVRWtWB.jpeg" alt="Atleta en meditación">
+        <a href="#metodo" class="cta">Descubre el Método</a>
+    </section>
+    <section id="metodo">
+        <div class="section-content">
+            <h2 class="section-title">De Qué se Trata MindSight Elite</h2>
+            <p>MindSight Elite es una técnica revolucionaria que permite hacer cambios positivos, rápidos y permanentes en tu mente, emociones y experiencias deportivas. ¿Cómo? Eliminando programas limitantes y/o bloqueos emocionales que te pueden llevar a errores o no avanzar, como falta de concentración o miedo al fracaso.</p>
+            <p>Como exjugador de fútbol, desarrollé MindSight Elite para empoderar a atletas con técnicas mentales avanzadas. Combinando visualización, meditación guiada y visión mental para activar una percepción 360°que hará ralentizar el tiempo en competición, mejorando la intuición y fortaleciendo el alma para un éxito deportivo y personal.</p>
+            <div class="benefits">
+                <div class="benefit">
+                    <i class="fas fa-eye"></i>
+                    <h3>VISIÓN 360°</h3>
+                    <p>Percepción total del entorno, como si vieras todo a la vez.</p>
+                </div>
+                <div class="benefit">
+                    <i class="fas fa-clock"></i>
+                    <h3>DOMINIO DEL TIEMPO</h3>
+                    <p>Siente el juego en cámara lenta para decisiones imbatibles.</p>
+                </div>
+                <div class="benefit">
+                    <i class="fas fa-yin-yang"></i>
+                    <h3>FUERZA DEL ALMA</h3>
+                    <p>Supera traumas y alcanza equilibrio mental y emocional.</p>
+                </div>
+            </div>
+        </div>
+        <img src="https://i.imgur.com/iq9Sh0t.jpeg" alt="Método MindSight" class="section-image">
+    </section>
+    <section id="proceso">
+        <div class="section-content">
+            <h2 class="section-title">El Proceso de MindSight Elite</h2>
+            <p>El proceso está diseñado en 10 sesiones para deportistas de élite, adaptado a tu deporte específico. Cada paso libera bloqueos, reprograma tu mente y transforma tu rendimiento.</p>
+            <div class="process">
+                <ol>
+                    <li><strong>Liberación</strong>: Identifica y elimina bloqueos emocionales que afectan tu rendimiento, como traumas deportivos o ansiedad en momentos clave, utilizando visión 360° para expandir tu percepción.</li>
+                    <li><strong>Reprogramación</strong>: Reprograma tu mente con meditación guiada y técnicas de intuición para tomar decisiones rápidas y efectivas en la competición.</li>
+                    <li><strong>Transformación</strong>: Desbloquea tu energía vital y fortalece tu alma, alcanzando un bienestar integral que se refleja en tu desempeño competitivo.</li>
+                </ol>
+                <p>Cada sesión dura 60-90 minutos, personalizada para tu deporte. Estas sesiones se imparten de manera presencial, ya que la interacción directa con el coach maximiza la eficacia del método. Las evidencias científicas destacan que la vibración de la voz, la resonancia y el lenguaje no verbal en un entorno presencial potencian la conexión emocional y la absorción del mensaje, asegurando resultados más profundos y duraderos en comparación con formatos en línea o grabados.</p>
+            </div>
+        </div>
+        <img src="https://i.imgur.com/EPnJYFT.jpeg" alt="Proceso MindSight" class="section-image">
+    </section>
+    <section id="beneficios">
+        <div class="section-content">
+            <h2 class="section-title">Beneficios de MindSight Elite</h2>
+            <p>Resultados rápidos y definitivos en tu rendimiento deportivo.</p>
+            <ul>
+                <li>Eliminación de creencias limitantes, como "no soy lo suficientemente bueno" o "siempre fallo en los momentos clave".</li>
+                <li>Mayor autonomía, responsabilidad y autogestión para liderar.</li>
+                <li>Relaciones constructivas para mejorar el trabajo.</li>
+                <li>Herramientas emocionales para superar traumas y alcanzar tu máximo potencial en competición.</li>
+            </ul>
+        </div>
+        <img src="https://i.imgur.com/1FS8bQe.jpeg" alt="Beneficios MindSight" class="section-image">
+    </section>
+    <section id="creador">
+        <div class="section-content">
+            <h2 class="section-title">Creador - José Pablo Cañete</h2>
+            <p>Hola, soy José Pablo Cañete, creador de MindSight Elite. Como exjugador de fútbol, que ha pertenecido a clubes como Sevilla FC SAD, Málaga CF SAD o Guaraní FC, enfrenté fuertes desafíos emocionales y físicos que afectaron mi carrera. A raíz de esta experiencia y tras investigaciones durante años en varias disciplinas y métodos, descubrí cómo reprogramar el sistema mental y emocional, logrando un rendimiento óptimo en el campo. Desde 2025, he aplicado este método en atletas, obteniendo resultados a nivel mental y emocional, transformando sus carreras deportivas. Contamos con más de 50 deportistas tratados.</p>
+        </div>
+        <img src="[TU_FOTO_URL]" alt="José Pablo Cañete" class="section-image">
+    </section>
+    <section id="testimonios">
+        <div class="section-content">
+            <h2 class="section-title">Testimonios</h2>
+            <p>Las palabras de nuestros atletas hablan por sí solas. MindSight Elite ha cambiado carreras y vidas en más de 30 países.</p>
+            <div>
+                <p>"MindSight Elite cambió mi carrera. Ahora veo el juego antes que nadie, como si el tiempo se detuviera. También ha cambiado mi vida personal."</p>
+                <span>- Jose Jimenez, futbolista</span>
+            </div>
+            <div>
+                <p>"La intuición que gané me dio la ventaja definitiva en partidos clave. El trabajo con el alma me ayudó a superar lesiones que pensé eran físicas."</p>
+                <span>- María Gómez, Tenista </span>
+            </div>
+            <div>
+                <p>"Como futbolista, la vision mental 360 activó algo en mí que no sabía que tenía. Ahora domino el campo con calma total."</p>
+                <span>- Fabian Campos, Jugador de Fútbol</span>
+            </div>
+        </div>
+    </section>
+    <section id="faqs">
+        <div class="section-content">
+            <h2 class="section-title">Preguntas Frecuentes</h2>
+            <div class="faq">
+                <h3>¿Cómo puede MindSight Elite mejorar mi rendimiento en competencia?</h3>
+                <p>Al activar la visión mental 360° y dominar el tiempo, toma decisiones más rápidas y precisas bajo presión.</p>
+            </div>
+            <div class="faq">
+                <h3>¿Es adecuado para superar traumas emocionales en el deporte?</h3>
+                <p>Sí, las meditaciones guiadas ayudan a liberar bloqueos emocionales deportivos y de la vida en general, para así lograr fortalecer el alma para un rendimiento imbatible.</p>
+            </div>
+            <div class="faq">
+                <h3>¿Cuánto tiempo tarda en ver resultados?</h3>
+                <p>Los cambios se notan inmediatamente, con resultados definitivos en las 10 sesiones.</p>
+            </div>
+            <div class="faq">
+                <h3>¿Puedo aplicarlo en equipo para mejorar la cohesión grupal?</h3>
+                <p>Sí, MindSight Elite promueve relaciones constructivas y liderazgo en equipo, aunque lo recomendado son sesiones individuales, para trabajar los bloqueos de forma personalizada, ya que, no todo el mundo avanza a la misma velocidad.</p>
+            </div>
+            <div class="faq">
+                <h3>¿Puede aplicarse en deportistas infantiles y junior?</h3>
+                <p>Sí, MindSight Elite está pensado para cualquier deportista, sin importar la edad.</p>
+            </div>
+            <div class="faq">
+                <h3>No soy deportista ¿me interesa este método?</h3>
+                <p>Sí, MindSight Elite está diseñado para el deporte, pero es aplicable a cualquier persona que desee avanzar en su vida, ya sea a nivel personal o profesional.</p>
+            </div>
+            <div class="faq">
+                <h3>¿Qué pasa si no puedo asistir a todas las sesiones?</h3>
+                <p>Se recomienda asistir a todas las sesiones para obtener los mejores resultados, pero el método se puede ajustar según tus necesidades, siempre priorizando la continuidad.</p>
+            </div>
+            <div class="faq">
+                <h3>¿Es necesario tener experiencia previa en meditación?</h3>
+                <p>No, MindSight Elite está diseñado para todos los niveles, y el coach te guiará desde el principio sin necesidad de experiencia previa.</p>
+            </div>
+        </div>
+    </section>
+    <section id="contacto">
+        <img src="https://i.imgur.com/jJ0Ogpr.jpeg" alt="Contacto MindSight" class="section-image" style="max-width: 200px; margin: 0 auto 20px auto;">
+        <div class="section-content">
+            <h2 class="section-title">Contacto</h2>
+            <p>Si tienes alguna consulta o duda, estaremos encantados de responder a tus preguntas. Puedes escribirnos directamente a metodomse360@gmail.com.</p>
+            <p>Siempre leemos y respondemos cada uno de los correos que llegan a nosotros.</p>
+            <div class="contact-form">
+                <form action="https://formspree.io/f/myzdoolz" method="POST">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="mensaje">Mensaje:</label>
+                    <textarea id="mensaje" name="mensaje" required></textarea>
+                    <button type="submit" class="cta">Enviar Mensaje</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <footer>
+        © 2025 MindSight Elite | Entrenamiento Mental de Alto Rendimiento | <a href="mailto:metodomse360@gmail.com">metodomse360@gmail.com</a>
+    </footer>
 </body>
 </html>
