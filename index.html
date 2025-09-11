@@ -27,11 +27,12 @@
             z-index: 1000; 
             display: flex; 
             align-items: center; 
-            justify-content: space-between; 
+            justify-content: center; 
         }
         header img { 
             height: 40px; 
             vertical-align: middle; 
+            margin-right: 20px; 
         }
         nav ul { 
             list-style: none; 
@@ -86,6 +87,10 @@
             margin-top: 20px; 
             border-radius: 10px; 
         }
+        #inicio.hero .logo-extra { 
+            max-width: 150px; 
+            margin: 20px auto; 
+        }
         #inicio.hero .cta { 
             margin: 0 auto; 
         }
@@ -128,14 +133,9 @@
             max-width: 1200px; 
             margin: 0 auto; 
             scroll-margin-top: 80px; 
-            display: flex; 
-            flex-wrap: wrap; 
-            align-items: flex-start; 
-            gap: 20px; 
         }
         .section-content { 
-            flex: 1; 
-            min-width: 0; 
+            width: 100%; 
         }
         .section-title { 
             text-align: center; 
@@ -143,7 +143,6 @@
             color: #004080; 
             margin-bottom: 40px; 
             font-weight: 700; 
-            width: 100%; 
         }
         .benefits { 
             display: flex; 
@@ -220,15 +219,35 @@
             resize: vertical; 
         }
         .section-image { 
-            max-width: 40%; 
+            max-width: 100%; 
             height: auto; 
-            margin: 0 20px; 
+            margin: 20px auto; 
+            display: block; 
             border-radius: 10px; 
-            flex-shrink: 0; 
         }
         #contacto .section-image { 
             max-width: 200px; 
             margin: 0 auto 20px auto; 
+        }
+        .gallery { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-top: 20px; 
+            max-width: 100%; 
+        }
+        .gallery .vertical { 
+            max-width: 45%; /* Dos verticales en paralelo */
+            height: auto; 
+            object-fit: contain; 
+            border-radius: 10px; 
+        }
+        .gallery .horizontal { 
+            max-width: 90%; /* Horizontal debajo, más ancha */
+            height: auto; 
+            object-fit: contain; 
+            border-radius: 10px; 
         }
         @media (max-width: 768px) { 
             .hamburger { display: block; }
@@ -237,7 +256,8 @@
                 flex-direction: column; 
                 position: absolute; 
                 top: 60px; 
-                right: 20px; 
+                left: 50%; 
+                transform: translateX(-50%); 
                 background: #004080; 
                 width: 150px; 
                 padding: 10px; 
@@ -245,7 +265,7 @@
             }
             nav ul.active { display: flex; }
             nav li { margin: 10px 0; }
-            header { flex-direction: column; align-items: flex-start; }
+            header { flex-direction: column; align-items: center; }
             header img { margin: 10px 0; }
             .hero { padding: 80px 20px 40px; }
             .hero h1 { font-size: 2.5em; }
@@ -253,26 +273,18 @@
             .benefits { flex-direction: column; }
             .benefit { max-width: 100%; }
             .contact-form { padding: 15px; }
-            section { 
+            section { padding: 40px 20px; }
+            .section-image { margin: 10px 0; }
+            #contacto .section-image { max-width: 150px; }
+            .gallery { 
                 flex-direction: column; 
-                padding: 40px 20px; 
+                gap: 10px; 
             }
-            .section-content { 
-                order: 1; 
-                width: 100%; 
-            }
-            .section-image { 
-                order: 2; 
+            .gallery .vertical { 
                 max-width: 100%; 
-                margin: 10px 0; 
             }
-            #contacto .section-image { 
-                max-width: 150px; 
-                margin: 0 auto 20px auto; 
-            }
-            .faq { 
-                padding: 10px; 
-                margin: 10px 0; 
+            .gallery .horizontal { 
+                max-width: 100%; 
             }
         }
         footer { 
@@ -285,8 +297,8 @@
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.queryselector('.hamburger');
-            const navUl = document.queryselector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            const navUl = document.querySelector('nav ul');
             hamburger.addEventListener('click', () => {
                 navUl.classList.toggle('active');
             });
@@ -312,15 +324,18 @@
     </header>
     <section id="inicio" class="hero">
         <h1>MindSight Elite</h1>
+        <img src="https://i.imgur.com/aNReoxl.png" alt="MindSight Elite Logo" class="logo-extra">
         <p>Fórmate en MindSight Elite, transforma tu rendimiento deportivo y lleva tu carrera al siguiente nivel. Ahora tienes la oportunidad de alcanzar tu máximo potencial. No pierdas más tiempo en métodos que no te llevan a ningún sitio. Alcanza resultados rápidos, sorprendentes y definitivos. Promueve tu autonomía, responsabilidad y liderazgo. Rodéate de un equipo cohesionado y relaciones constructivas. Amplía tus herramientas emocionales y domina el tiempo bajo presión.</p>
         <img src="https://i.imgur.com/RVRWtWB.jpeg" alt="Atleta en meditación">
         <a href="#metodo" class="cta">Descubre el Método</a>
     </section>
     <section id="metodo">
+        <img src="https://i.imgur.com/aNReoxl.png" alt="MindSight Elite Logo" class="section-image" style="max-width: 150px; margin: 0 auto 20px auto;">
         <div class="section-content">
             <h2 class="section-title">De Qué se Trata MindSight Elite</h2>
+            <p><strong>Despierta tu visión 360° y domina el juego con poder interior</strong></p>
             <p>MindSight Elite es una técnica revolucionaria que permite hacer cambios positivos, rápidos y permanentes en tu mente, emociones y experiencias deportivas. ¿Cómo? Eliminando programas limitantes y/o bloqueos emocionales que te pueden llevar a errores o no avanzar, como falta de concentración o miedo al fracaso.</p>
-            <p>Como exjugador de fútbol, desarrollé MindSight Elite para empoderar a atletas con técnicas mentales avanzadas. Combinando visualización, meditación guiada y visión mental para activar una percepción 360°que hará ralentizar el tiempo en competición, mejorando la intuición y fortaleciendo el alma para un éxito deportivo y personal.</p>
+            <p>Como exjugador de fútbol, desarrollé MindSight Elite para empoderar a atletas con técnicas mentales avanzadas. Combinando visualización, meditación guiada y visión mental para activar una percepción 360° que hará ralentizar el tiempo en competición, mejorando la intuición y fortaleciendo el alma para un éxito deportivo y personal.</p>
             <div class="benefits">
                 <div class="benefit">
                     <i class="fas fa-eye"></i>
@@ -373,8 +388,12 @@
         <div class="section-content">
             <h2 class="section-title">Creador - José Pablo Cañete</h2>
             <p>Hola, soy José Pablo Cañete, creador de MindSight Elite. Como exjugador de fútbol, que ha pertenecido a clubes como Sevilla FC SAD, Málaga CF SAD o Guaraní FC, enfrenté fuertes desafíos emocionales y físicos que afectaron mi carrera. A raíz de esta experiencia y tras investigaciones durante años en varias disciplinas y métodos, descubrí cómo reprogramar el sistema mental y emocional, logrando un rendimiento óptimo en el campo. Desde 2025, he aplicado este método en atletas, obteniendo resultados a nivel mental y emocional, transformando sus carreras deportivas. Contamos con más de 50 deportistas tratados.</p>
+            <div class="gallery">
+                <img src="https://i.imgur.com/wWKnHyO.png" alt="José Pablo Cañete como futbolista" class="vertical">
+                <img src="https://i.imgur.com/ZTpX7xu.png" alt="José Pablo Cañete como futbolista" class="vertical">
+                <img src="https://i.imgur.com/2UGyeMt.png" alt="José Pablo Cañete como futbolista" class="horizontal">
+            </div>
         </div>
-        <img src="[TU_FOTO_URL]" alt="José Pablo Cañete" class="section-image">
     </section>
     <section id="testimonios">
         <div class="section-content">
