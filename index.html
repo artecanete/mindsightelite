@@ -297,15 +297,27 @@
             margin-top: 40px; 
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.querySelector('.hamburger');
-            const navUl = document.querySelector('nav ul');
-            hamburger.addEventListener('click', () => {
-                navUl.classList.toggle('active');
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const hamburger = document.querySelector('.hamburger');
+        const navUl = document.querySelector('nav ul');
+
+        // Alternar menú al hacer clic en el hamburguesa
+        hamburger.addEventListener('click', () => {
+            navUl.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer clic en un enlace en móvil
+        const navLinks = document.querySelectorAll('nav ul li a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    navUl.classList.remove('active'); // Cierra el menú en móvil
+                }
             });
         });
-    </script>
+    });
+</script>
 </head>
 <body>
     <header>
@@ -478,3 +490,4 @@
 </body>
 
 </html>
+
