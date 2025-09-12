@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -293,17 +292,20 @@
         ];
 
         // Login
+        const adminUser = "admin";
+        const adminPass = "mindsight123";
+
         document.getElementById("loginForm").addEventListener("submit", function(e) {
             e.preventDefault();
-            const user = document.getElementById("username").value;
-            const pass = document.getElementById("password").value;
+            const user = document.getElementById("username").value.trim();
+            const pass = document.getElementById("password").value.trim();
             if (user === adminUser && pass === adminPass) {
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("dashboard").classList.remove("hidden");
                 loadAthletes();
                 loadAthleteSelects();
             } else {
-                alert("Usuario o contraseña incorrectos.");
+                alert("Usuario o contraseña incorrectos. Usa: admin / mindsight123");
             }
         });
 
@@ -462,8 +464,8 @@
             const col = document.getElementById("color").value;
             const tex = document.getElementById("textura").value;
             const siz = document.getElementById("tamaño").value;
-            if (!st || !col || !tex || !siz) {
-                alert("Completa todos los campos.");
+            if (!obj || !st || !col || !tex || !siz) {
+                alert("Completa todos los campos del análisis.");
                 return;
             }
 
@@ -488,7 +490,7 @@
 
             const questions = `Preguntas para explorar: ${stateGuide} ${colorGuide} ${textureGuide} ${sizeGuide}`;
 
-            const healing = `Cómo sanarlo: Libera el trauma con respiración cuadrada (inhala 4 seg, reten 4, exhala 4, reten 4) y gratitud al cuerpo ('Gracias, corazón, por latir'). Re-visualiza el ${obj} en su forma perfecta: nuevo, color dorado (éxito), textura lisa y caliente (armonía y conexión), tamaño mediano (equilibrio), limpio, reluciente, con marco/orilla dorada reflejando victoria. Por ejemplo, si es un espejo roto, imagina repararlo a cristalino, cálido, reflejando tu rostro lleno de paz. Integra afirmaciones: 'Soy ${psique.toLowerCase()} equilibrado y poderoso'.`;
+            const healing = `Cómo sanarlo: Libera el trauma con respiración cuadrada (inhala 4 seg, reten 4, exhala 4, reten 4) y gratitud al cuerpo ('Gracias, corazón, por latir'). Re-visualiza el ${obj} en su forma perfecta: ${obj === 'espejo' ? 'nuevo, limpio, reluciente, con marco dorado reflejando un rostro lleno de paz' : obj === 'puerta' ? 'abierta, dorada, lisa, cálida, invitando a nuevas oportunidades' : obj === 'reloj' ? 'funcionando, dorado, liso, cálido, marcando tiempo en armonía' : obj === 'libro' ? 'nuevo, dorado, liso, cálido, con páginas llenas de posibilidades' : obj === 'rio' ? 'tranquilo, dorado, liso, cálido, fluyendo suavemente' : obj === 'vela' ? 'encendida, dorada, lisa, cálida, con llama brillante' : obj === 'puente' ? 'sólido, dorado, liso, cálido, conectando relaciones fuertes' : obj === 'llave' ? 'nueva, dorada, lisa, cálida, desbloqueando oportunidades' : obj === 'coche' ? 'nuevo, dorado, liso, cálido, avanzando con confianza' : 'sólida, dorada, lisa, cálida, acogiendo paz familiar'}, tamaño mediano (equilibrio). Integra afirmaciones: 'Soy ${psique.toLowerCase()} equilibrado y poderoso'.`;
 
             // Asignar tip
             const athletes = getAthletes();
@@ -586,4 +588,3 @@
 
 </body>
 </html>
-```
