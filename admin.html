@@ -1,4 +1,4 @@
-a ver
+24
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -186,52 +186,61 @@ a ver
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM cargado, iniciando configuración de login");
+            
             // Login
             const adminUser = "admin";
             const adminPass = "mindsight123";
             const loginForm = document.getElementById("loginForm");
-            if (loginForm) {
-                loginForm.addEventListener("submit", function(e) {
-                    e.preventDefault();
-                    console.log("Formulario de login enviado"); // Depuración
-                    const user = document.getElementById("username")?.value.trim();
-                    const pass = document.getElementById("password")?.value.trim();
-                    const loginDiv = document.getElementById("login");
-                    const dashboardDiv = document.getElementById("dashboard");
-                    if (!user || !pass) {
-                        console.error("Usuario o contraseña vacíos");
-                        alert("Por favor, completa ambos campos.");
-                        return;
-                    }
-                    if (!loginDiv || !dashboardDiv) {
-                        console.error("Elementos login o dashboard no encontrados");
-                        alert("Error interno: elementos de interfaz no encontrados.");
-                        return;
-                    }
-                    if (user === adminUser && pass === adminPass) {
-                        console.log("Login exitoso, mostrando dashboard");
-                        loginDiv.classList.add("hidden");
-                        dashboardDiv.classList.remove("hidden");
-                        loadAthletes();
-                        loadAthleteSelects();
-                    } else {
-                        console.error("Credenciales incorrectas", { user, pass });
-                        alert("Usuario o contraseña incorrectos. Usa: admin / mindsight123");
-                    }
-                });
-            } else {
-                console.error("Elemento loginForm no encontrado.");
-                alert("Error: Formulario de login no encontrado.");
+            const loginDiv = document.getElementById("login");
+            const dashboardDiv = document.getElementById("dashboard");
+
+            if (!loginForm) {
+                console.error("Error: Elemento loginForm no encontrado");
+                alert("Error crítico: Formulario de login no encontrado. Verifica el HTML.");
+                return;
             }
+            if (!loginDiv || !dashboardDiv) {
+                console.error("Error: Elementos login o dashboard no encontrados", { loginDiv, dashboardDiv });
+                alert("Error crítico: Elementos de interfaz no encontrados. Verifica el HTML.");
+                return;
+            }
+
+            loginForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                console.log("Formulario de login enviado");
+                const user = document.getElementById("username")?.value.trim();
+                const pass = document.getElementById("password")?.value.trim();
+
+                if (!user || !pass) {
+                    console.error("Usuario o contraseña vacíos", { user, pass });
+                    alert("Por favor, completa ambos campos.");
+                    return;
+                }
+
+                console.log("Verificando credenciales", { user, pass });
+                if (user === adminUser && pass === adminPass) {
+                    console.log("Credenciales correctas, mostrando dashboard");
+                    loginDiv.classList.add("hidden");
+                    dashboardDiv.classList.remove("hidden");
+                    loginForm.reset();
+                    console.log("Cargando datos iniciales");
+                    loadAthletes();
+                    loadAthleteSelects();
+                } else {
+                    console.error("Credenciales incorrectas", { user, pass });
+                    alert("Usuario o contraseña incorrectos. Usa: admin / mindsight123");
+                }
+            });
 
             function logout() {
                 console.log("Cerrando sesión");
-                document.getElementById("dashboard").classList.add("hidden");
-                document.getElementById("login").classList.remove("hidden");
-                document.getElementById("loginForm").reset();
+                dashboardDiv.classList.add("hidden");
+                loginDiv.classList.remove("hidden");
+                loginForm.reset();
             }
 
-            // Datos para análisis (inspirados en Carl Jung)
+            // Resto del código (gestión de deportistas, análisis, etc.)
             const objects = {
                 "espejo": "Ego/Auto-percepción (Arquetipo de la Sombra)",
                 "puerta": "Transiciones/Cambio (Arquetipo del Umbral)",
@@ -368,7 +377,7 @@ a ver
                     "flotante": ["Desconexión del rumbo", "Evasión del camino personal.", "¿Por qué flota el coche? ¿Qué evitas avanzar?", "Visualiza el coche anclada, en un camino firme."],
                     "hundido": ["Estancamiento vital", "Peso que impide avanzar.", "¿Qué hunde el coche? ¿Qué carga llevas?", "Visualiza el coche emergiendo, listo para avanzar."],
                     "viejo": ["Carga del pasado", "Traumas que frenan el rumbo.", "¿Qué pasado guarda el coche? ¿Qué necesitas soltar?", "Visualiza el coche renovado, avanzando en el presente."],
-                    "nuevo": ["Renovación del rumbo", "Oportunidad para un nuevo camino.", "¿A dónde va este coche? ¿Qué comienzas?", "Visualiza el coche nuevo, avanzando con energía."],
+                    "nuevo": ["Renovación del rumbo", "Oportunidad para un nuevo camino.", "¿Qué abre esta puerta? ¿Qué comienzas?", "Visualiza el coche nuevo, avanzando con energía."],
                     "otro": ["Definido por notas", "Trauma personalizado.", "Especifica en notas qué simboliza este estado.", "Visualiza el coche según las notas, en un estado ideal de movimiento."]
                 },
                 "casa": {
