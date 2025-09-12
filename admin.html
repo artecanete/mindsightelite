@@ -1,4 +1,4 @@
-23;40
+a ver
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,20 +10,20 @@
         #login, #dashboard { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         form { display: flex; flex-direction: column; }
         label { margin: 10px 0 5px; }
-        input, select, button { padding: 10px; margin-bottom: 10px; }
-        #output { margin-top: 20px; padding: 10px; background: #e0f7fa; border: 1px solid #00acc1; }
-        #deportistas, #analyses { margin-top: 20px; }
+        input, select, button, textarea { padding: 10px; margin-bottom: 10px; }
+        #analysisOutput { margin-top: 20px; padding: 10px; background: #e0f7fa; border: 1px solid #00acc1; }
+        #athletesTable, #analysesTable { margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background: #f2f2f2; }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         button { background: #007cba; color: white; border: none; cursor: pointer; }
         button:hover { background: #005a87; }
         button.edit-btn, button.delete-btn, button.save-btn { padding: 5px; font-size: 12px; margin-right: 5px; }
         .edit-btn { background: #4CAF50; }
         .delete-btn { background: #f44336; }
         .save-btn { background: #2196F3; }
-        input.edit-field, textarea { display: none; width: 100%; }
+        input.edit-field, textarea { display: none; width: 100%; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -40,7 +40,6 @@
     <div id="dashboard" class="hidden">
         <h2>Dashboard Admin - MindSight Elite 360</h2>
        
-        <!-- Formulario para Datos de Deportista -->
         <h3>Agregar Deportista</h3>
         <form id="athleteForm">
             <label for="nombre">Nombre:</label>
@@ -59,7 +58,7 @@
             <input type="time" id="hora_nacimiento" required>
             <button type="submit">Guardar Deportista</button>
         </form>
-        <!-- Lista de Deportistas Guardados -->
+
         <h3>Deportistas Registrados</h3>
         <table id="athletesTable">
             <thead>
@@ -78,7 +77,7 @@
             </thead>
             <tbody></tbody>
         </table>
-        <!-- Formulario para Análisis de Objeto -->
+
         <h3>Análisis de Objeto (Vinculado a Deportista)</h3>
         <form id="analysisForm">
             <label for="athleteIdForAnalysis">Seleccionar Deportista:</label>
@@ -160,7 +159,7 @@
             <button type="submit">Analizar y Guardar</button>
         </form>
         <div id="analysisOutput"></div>
-        <!-- Tabla de Análisis por Deportista -->
+
         <h3>Análisis por Deportista</h3>
         <select id="viewAthlete" onchange="loadAnalyses()">
             <option value="">-- Elegir Deportista --</option>
@@ -180,12 +179,58 @@
             </thead>
             <tbody></tbody>
         </table>
-        <!-- Botones -->
+
         <button onclick="exportData()">Exportar Datos (CSV)</button>
         <button onclick="logout()">Cerrar Sesión</button>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Login
+            const adminUser = "admin";
+            const adminPass = "mindsight123";
+            const loginForm = document.getElementById("loginForm");
+            if (loginForm) {
+                loginForm.addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    console.log("Formulario de login enviado"); // Depuración
+                    const user = document.getElementById("username")?.value.trim();
+                    const pass = document.getElementById("password")?.value.trim();
+                    const loginDiv = document.getElementById("login");
+                    const dashboardDiv = document.getElementById("dashboard");
+                    if (!user || !pass) {
+                        console.error("Usuario o contraseña vacíos");
+                        alert("Por favor, completa ambos campos.");
+                        return;
+                    }
+                    if (!loginDiv || !dashboardDiv) {
+                        console.error("Elementos login o dashboard no encontrados");
+                        alert("Error interno: elementos de interfaz no encontrados.");
+                        return;
+                    }
+                    if (user === adminUser && pass === adminPass) {
+                        console.log("Login exitoso, mostrando dashboard");
+                        loginDiv.classList.add("hidden");
+                        dashboardDiv.classList.remove("hidden");
+                        loadAthletes();
+                        loadAthleteSelects();
+                    } else {
+                        console.error("Credenciales incorrectas", { user, pass });
+                        alert("Usuario o contraseña incorrectos. Usa: admin / mindsight123");
+                    }
+                });
+            } else {
+                console.error("Elemento loginForm no encontrado.");
+                alert("Error: Formulario de login no encontrado.");
+            }
+
+            function logout() {
+                console.log("Cerrando sesión");
+                document.getElementById("dashboard").classList.add("hidden");
+                document.getElementById("login").classList.remove("hidden");
+                document.getElementById("loginForm").reset();
+            }
+
             // Datos para análisis (inspirados en Carl Jung)
             const objects = {
                 "espejo": "Ego/Auto-percepción (Arquetipo de la Sombra)",
@@ -292,7 +337,7 @@
                     "oscuro": ["Aislamiento relacional", "Miedo a conectar con otros.", "¿Qué oscurece el puente? ¿Qué temes unir?", "Visualiza el puente iluminado, conectando con claridad."],
                     "abierto": ["Conexión libre", "Receptividad a relaciones profundas.", "¿Qué une el puente? ¿Qué aceptas?", "Visualiza el puente abierto, facilitando conexiones."],
                     "cerrado": ["Aislamiento protector", "Miedo a conectar con el otro lado.", "¿Por qué está cerrado? ¿Qué temes cruzar?", "Visualiza el puente abriéndose, seguro para conectar."],
-                    "flotante": ["Desconexión relacional", "Evasión de vínculos profundos.", "¿Por qué flota el puente? ¿Qué evitas conectar?", "Visualiza el puente anclado, uniendo con firmeza."],
+                    "flotante": ["Desconexión relacional", "Evasión de vínculos profundos.", "¿Por qué flota el puente? ¿Qué evitas conectar?", "Visualiza el puente anclada, uniendo con firmeza."],
                     "hundido": ["Colapso relacional", "Peso que impide conexiones.", "¿Qué hunde el puente? ¿Qué carga llevas?", "Visualiza el puente emergiendo, sólido y claro."],
                     "viejo": ["Relaciones antiguas", "Traumas en vínculos pasados.", "¿Qué pasado guarda el puente? ¿Qué necesitas soltar?", "Visualiza el puente renovado, conectando el presente."],
                     "nuevo": ["Renovación relacional", "Oportunidad para nuevos lazos.", "¿Qué une este puente? ¿Qué comienzas?", "Visualiza el puente nuevo, fortaleciendo conexiones."],
@@ -320,7 +365,7 @@
                     "oscuro": ["Miedo al rumbo", "Trauma por pérdida de dirección.", "¿Qué oscurece el coche? ¿Qué temes?", "Visualiza el coche iluminado, avanzando con confianza."],
                     "abierto": ["Vulnerabilidad en el viaje", "Exposición excesiva en el rumbo.", "¿Qué expones en el viaje? ¿Qué necesitas proteger?", "Visualiza el coche protegido, avanzando con seguridad."],
                     "cerrado": ["Bloqueo del rumbo", "Resistencia a avanzar.", "¿Por qué está detenido? ¿Qué temes?", "Visualiza el coche abierto, listo para moverse."],
-                    "flotante": ["Desconexión del rumbo", "Evasión del camino personal.", "¿Por qué flota el coche? ¿Qué evitas avanzar?", "Visualiza el coche anclado, en un camino firme."],
+                    "flotante": ["Desconexión del rumbo", "Evasión del camino personal.", "¿Por qué flota el coche? ¿Qué evitas avanzar?", "Visualiza el coche anclada, en un camino firme."],
                     "hundido": ["Estancamiento vital", "Peso que impide avanzar.", "¿Qué hunde el coche? ¿Qué carga llevas?", "Visualiza el coche emergiendo, listo para avanzar."],
                     "viejo": ["Carga del pasado", "Traumas que frenan el rumbo.", "¿Qué pasado guarda el coche? ¿Qué necesitas soltar?", "Visualiza el coche renovado, avanzando en el presente."],
                     "nuevo": ["Renovación del rumbo", "Oportunidad para un nuevo camino.", "¿A dónde va este coche? ¿Qué comienzas?", "Visualiza el coche nuevo, avanzando con energía."],
@@ -387,69 +432,42 @@
                 "Manifestación con agua: Infunde un vaso de agua con 'Esta agua limpia mis heridas' (2 min). Bébelo visualizando purificación.",
                 "Círculo de luz: Visualiza 3-5 min un círculo de luz protectora, diciendo: 'Estoy sanado, estoy completo' para integrar sanación."
             ];
-            // Login
-            const adminUser = "admin";
-            const adminPass = "mindsight123"; // Corregido para coincidir con el mensaje de error
-            const loginForm = document.getElementById("loginForm");
-            if (loginForm) {
-                loginForm.addEventListener("submit", function(e) {
-                    e.preventDefault();
-                    const user = document.getElementById("username").value.trim();
-                    const pass = document.getElementById("password").value.trim();
-                    if (user === adminUser && pass === adminPass) {
-                        document.getElementById("login").classList.add("hidden");
-                        document.getElementById("dashboard").classList.remove("hidden");
-                        loadAthletes();
-                        loadAthleteSelects();
-                    } else {
-                        alert("Usuario o contraseña incorrectos. Usa: admin / mindsight123");
-                    }
-                });
-            } else {
-                console.error("Elemento loginForm no encontrado.");
-            }
-            function logout() {
-                document.getElementById("dashboard").classList.add("hidden");
-                document.getElementById("login").classList.remove("hidden");
-            }
-            // Actualizar estados según objeto (usamos estados globales, no dinámicos por objeto)
-            const estadoSelect = document.getElementById("estado");
-            if (estadoSelect) {
-                const estados = ["roto", "sucio", "limpio", "brillante", "oscuro", "abierto", "cerrado", "flotante", "hundido", "viejo", "nuevo", "otro"];
-                estados.forEach(estado => {
-                    const option = document.createElement("option");
-                    option.value = estado;
-                    option.text = estado.charAt(0).toUpperCase() + estado.slice(1);
-                    estadoSelect.appendChild(option);
-                });
-            }
+
             // Llenar selects para análisis y visualización
             function loadAthleteSelects() {
+                console.log("Cargando selects de deportistas");
                 const athletes = getAthletes();
                 const analysisSelect = document.getElementById("athleteIdForAnalysis");
                 const viewSelect = document.getElementById("viewAthlete");
-                analysisSelect.innerHTML = "<option value=''>-- Elegir --</option>";
-                viewSelect.innerHTML = "<option value=''>-- Elegir Deportista --</option>";
-                athletes.forEach(athlete => {
-                    const optionAnalysis = document.createElement("option");
-                    optionAnalysis.value = athlete.id;
-                    optionAnalysis.text = `${athlete.nombre} ${athlete.apellidos}`;
-                    analysisSelect.appendChild(optionAnalysis);
-                    const optionView = document.createElement("option");
-                    optionView.value = athlete.id;
-                    optionView.text = `${athlete.nombre} ${athlete.apellidos}`;
-                    viewSelect.appendChild(optionView);
-                });
+                if (analysisSelect && viewSelect) {
+                    analysisSelect.innerHTML = "<option value=''>-- Elegir --</option>";
+                    viewSelect.innerHTML = "<option value=''>-- Elegir Deportista --</option>";
+                    athletes.forEach(athlete => {
+                        const optionAnalysis = document.createElement("option");
+                        optionAnalysis.value = athlete.id;
+                        optionAnalysis.text = `${athlete.nombre} ${athlete.apellidos}`;
+                        analysisSelect.appendChild(optionAnalysis);
+                        const optionView = document.createElement("option");
+                        optionView.value = athlete.id;
+                        optionView.text = `${athlete.nombre} ${athlete.apellidos}`;
+                        viewSelect.appendChild(optionView);
+                    });
+                } else {
+                    console.error("Selects de deportistas no encontrados");
+                }
             }
+
             // Obtener deportistas
             function getAthletes() {
                 return JSON.parse(localStorage.getItem("athletes")) || [];
             }
+
             // Guardar deportista
             const athleteForm = document.getElementById("athleteForm");
             if (athleteForm) {
                 athleteForm.addEventListener("submit", function(e) {
                     e.preventDefault();
+                    console.log("Guardando deportista");
                     const athlete = {
                         id: Date.now().toString(),
                         nombre: document.getElementById("nombre").value,
@@ -472,9 +490,15 @@
             } else {
                 console.error("Elemento athleteForm no encontrado.");
             }
+
             // Cargar tabla deportistas con edición inline
             function loadAthletes() {
-                const tableBody = document.getElementById("athletesTable").querySelector("tbody");
+                console.log("Cargando tabla de deportistas");
+                const tableBody = document.getElementById("athletesTable")?.querySelector("tbody");
+                if (!tableBody) {
+                    console.error("Tabla de deportistas no encontrada");
+                    return;
+                }
                 tableBody.innerHTML = "";
                 const athletes = getAthletes();
                 athletes.forEach(athlete => {
@@ -525,8 +549,10 @@
                     tableBody.appendChild(row);
                 });
             }
+
             // Edición inline
             function toggleEdit(id, field) {
+                console.log(`Editando campo ${field} para ID ${id}`);
                 const display = document.querySelector(`#athletesTable tr td:nth-child(${field === 'nombre' ? 2 : field === 'apellidos' ? 3 : field === 'telefono' ? 4 : field === 'mail' ? 5 : field === 'deporte' ? 6 : field === 'fecha_nacimiento' ? 7 : 8}) .display`);
                 const input = document.getElementById(`edit-${field}-${id}`);
                 const saveBtn = document.getElementById(`save-${id}`);
@@ -534,9 +560,13 @@
                     display.style.display = display.style.display === 'none' ? 'inline' : 'none';
                     input.style.display = input.style.display === 'none' ? 'inline' : 'none';
                     saveBtn.classList.toggle('hidden');
+                } else {
+                    console.error("Elementos para edición no encontrados", { display, input, saveBtn });
                 }
             }
+
             function saveEdit(id) {
+                console.log(`Guardando edición para ID ${id}`);
                 const athletes = getAthletes();
                 const athlete = athletes.find(a => a.id === id);
                 if (athlete) {
@@ -553,8 +583,10 @@
                     alert("Deportista actualizado.");
                 }
             }
+
             // Eliminar deportista
             function deleteAthlete(id) {
+                console.log(`Eliminando deportista ID ${id}`);
                 if (confirm("¿Estás seguro de que quieres eliminar este deportista y todos sus análisis?")) {
                     let athletes = getAthletes();
                     athletes = athletes.filter(a => a.id !== id);
@@ -564,13 +596,16 @@
                     alert("Deportista eliminado.");
                 }
             }
+
             // Análisis de objeto
             const analysisForm = document.getElementById("analysisForm");
             if (analysisForm) {
                 analysisForm.addEventListener("submit", function(e) {
                     e.preventDefault();
+                    console.log("Formulario de análisis enviado");
                     const athleteId = document.getElementById("athleteIdForAnalysis").value;
                     if (!athleteId) {
+                        console.error("Deportista no seleccionado");
                         alert("Selecciona un deportista.");
                         return;
                     }
@@ -581,10 +616,12 @@
                     const siz = document.getElementById("tamaño").value;
                     const notas = document.getElementById("notas_estado").value;
                     if (!obj || !st || !col || !tex || !siz) {
+                        console.error("Campos de análisis incompletos", { obj, st, col, tex, siz });
                         alert("Completa todos los campos del análisis.");
                         return;
                     }
                     if (st === "otro" && !notas) {
+                        console.error("Notas requeridas para estado 'otro'");
                         alert("Especifica notas para el estado 'Otro'.");
                         return;
                     }
@@ -634,6 +671,10 @@
                         loadAthletes();
                         loadAthleteSelects();
                         alert("Análisis guardado para el deportista.");
+                    } else {
+                        console.error("Deportista no encontrado para ID", athleteId);
+                        alert("Error: Deportista no encontrado.");
+                        return;
                     }
                     // Mostrar resultado
                     document.getElementById("analysisOutput").innerHTML = `
@@ -648,11 +689,17 @@
             } else {
                 console.error("Elemento analysisForm no encontrado.");
             }
+
             // Cargar análisis por deportista
             function loadAnalyses() {
+                console.log("Cargando análisis de deportista");
                 const athleteId = document.getElementById("viewAthlete").value;
-                const tableBody = document.getElementById("analysesTable").querySelector("tbody");
+                const tableBody = document.getElementById("analysesTable")?.querySelector("tbody");
                 const table = document.getElementById("analysesTable");
+                if (!tableBody || !table) {
+                    console.error("Tabla de análisis no encontrada");
+                    return;
+                }
                 table.classList.add("hidden");
                 tableBody.innerHTML = "";
                 if (athleteId) {
@@ -675,12 +722,15 @@
                         });
                         table.classList.remove("hidden");
                     } else {
+                        console.error("No hay análisis para deportista ID", athleteId);
                         alert("No hay análisis para este deportista.");
                     }
                 }
             }
+
             // Exportar a CSV
             function exportData() {
+                console.log("Exportando datos a CSV");
                 const athletes = getAthletes();
                 let csv = "ID,Nombre,Apellidos,Telefono,Email,Deporte,Fecha Nacimiento,Hora Nacimiento,Objeto,Estado,Notas,Color,Textura,Tamaño,Simbolismo,Trauma,Preguntas,Sanacion,Tip,Fecha Análisis\n";
                 athletes.forEach(athlete => {
