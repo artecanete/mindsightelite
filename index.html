@@ -251,40 +251,43 @@
             object-fit: contain;
             border-radius: 10px;
         }
-        @media (max-width: 768px) {
-            .hamburger { display: block; }
-            nav ul {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: #004080;
-                width: 150px;
-                padding: 10px;
-                border-radius: 5px;
-            }
-            nav ul.active { display: flex; }
-            nav li { margin: 10px 0; }
-            header { flex-direction: column; align-items: center; }
-            header img { margin: 10px 0; }
-            .hero { padding: 80px 20px 40px; }
-            .hero h1 { font-size: 2.5em; }
-            .hero p { font-size: 1.2em; }
-            .benefits { flex-direction: column; }
-            .benefit { max-width: 100%; }
-            .contact-form { padding: 15px; }
-            section { padding: 40px 20px; }
-            .section-image { margin: 10px 0; }
-            #contacto .section-image { max-width: 150px; }
-            .gallery {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .gallery .vertical { max-width: 100%; }
-            .gallery .horizontal { max-width: 100%; }
-        }
+        @media (max-width: 768px) { 
+    .hamburger { display: block; }
+    nav ul { 
+        display: none; 
+        flex-direction: column; 
+        position: absolute; 
+        top: 60px; 
+        right: 20px; /* Mueve al lateral derecho */
+        background: #004080; 
+        width: 150px; 
+        padding: 10px; 
+        border-radius: 5px; 
+    }
+    nav ul.active { display: flex; }
+    nav li { margin: 10px 0; }
+    header { flex-direction: column; align-items: center; }
+    header img { margin: 10px 0; }
+    .hero { padding: 80px 20px 40px; }
+    .hero h1 { font-size: 2.5em; }
+    .hero p { font-size: 1.2em; }
+    .benefits { flex-direction: column; }
+    .benefit { max-width: 100%; }
+    .contact-form { padding: 15px; }
+    section { padding: 40px 20px; }
+    .section-image { margin: 10px 0; }
+    #contacto .section-image { max-width: 150px; }
+    .gallery { 
+        flex-direction: column; 
+        gap: 10px; 
+    }
+    .gallery .vertical { 
+        max-width: 100%; 
+    }
+    .gallery .horizontal { 
+        max-width: 100%; 
+    }
+}
         footer {
             background: #333;
             color: white;
@@ -481,5 +484,6 @@
 </body>
 </html>
 </html>
+
 
 
