@@ -3,488 +3,444 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindSight Elite - Entrenamiento Mental Deportivo Revolucionario</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/png" href="https://i.imgur.com/aNReoxl.png">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>Dashboard Admin - MindSight Elite 360</title>
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            background: #e9eef3 url('https://www.transparenttextures.com/patterns/wave.png') repeat;
-            background-size: 200px;
-            line-height: 1.6;
-        }
-        header {
-            background: #004080;
-            color: white;
-            padding: 10px 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        header img {
-            height: 40px;
-            vertical-align: middle;
-            margin-right: 20px;
-        }
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-        }
-        nav li {
-            margin: 0 15px;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #ff6600;
-        }
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        #inicio.hero {
-            background: linear-gradient(to right, #004080, #0066cc);
-            color: white;
-            text-align: center;
-            padding: 120px 20px 60px;
-            margin-top: 60px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #inicio.hero h1 {
-            font-size: 3.5em;
-            margin: 0 0 15px;
-            font-weight: 700;
-        }
-        #inicio.hero p {
-            font-size: 1.3em;
-            max-width: 800px;
-            margin: 0 auto 20px;
-        }
-        #inicio.hero img {
-            width: 100%;
-            max-width: 1200px;
-            height: auto;
-            margin-top: 20px;
-            border-radius: 10px;
-        }
-        #inicio.hero .logo-extra {
-            max-width: 150px;
-            margin: 20px auto;
-        }
-        #inicio.hero .cta {
-            margin: 0 auto;
-        }
-        #metodo {
-            background: linear-gradient(to right, #e9eef3, #d1dfe7);
-        }
-        #proceso {
-            background: linear-gradient(to right, #d1dfe7, #e9eef3);
-        }
-        #beneficios {
-            background: linear-gradient(to right, #e9eef3, #d1dfe7);
-        }
-        #creador {
-            background: linear-gradient(to right, #d1dfe7, #e9eef3);
-        }
-        #testimonios {
-            background: linear-gradient(to right, #e9eef3, #d1dfe7);
-        }
-        #faqs {
-            background: linear-gradient(to right, #d1dfe7, #e9eef3);
-        }
-        #contacto {
-            background: linear-gradient(to right, #e9eef3, #d1dfe7);
-        }
-        .cta {
-            background: #ff6600;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 700;
-            display: inline-block;
-            transition: background 0.3s;
-        }
-        .cta:hover {
-            background: #e65100;
-        }
-        section {
-            padding: 80px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            scroll-margin-top: 80px;
-        }
-        .section-content {
-            width: 100%;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2.5em;
-            color: #004080;
-            margin-bottom: 40px;
-            font-weight: 700;
-        }
-        .benefits {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-        .benefit {
-            flex: 1;
-            margin: 20px;
-            text-align: center;
-            max-width: 300px;
-        }
-        .benefit i {
-            font-size: 2.5em;
-            color: #004080;
-            margin-bottom: 15px;
-        }
-        .benefit h3 {
-            font-size: 1.5em;
-            color: #004080;
-            margin: 10px 0;
-        }
-        .benefit p {
-            font-size: 1em;
-            color: #666;
-        }
-        .process {
-            background: #e6f2ff;
-            padding: 40px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-        .process ol {
-            font-size: 1.2em;
-            padding-left: 20px;
-        }
-        .faq {
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            max-width: 100%;
-        }
-        .faq h3 {
-            color: #004080;
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        .contact-form {
-            max-width: 500px;
-            margin: 20px auto;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .contact-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #004080;
-        }
-        .contact-form input, .contact-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .contact-form textarea {
-            height: 100px;
-            resize: vertical;
-        }
-        .section-image {
-            max-width: 100%;
-            height: auto;
-            margin: 20px auto;
-            display: block;
-            border-radius: 10px;
-        }
-        #contacto .section-image {
-            max-width: 200px;
-            margin: 0 auto 20px auto;
-        }
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            max-width: 100%;
-        }
-        .gallery .vertical {
-            max-width: 30%;
-            max-height: 200px;
-            height: auto;
-            object-fit: contain;
-            border-radius: 10px;
-        }
-        .gallery .horizontal {
-            max-width: 60%;
-            max-height: 200px;
-            height: auto;
-            object-fit: contain;
-            border-radius: 10px;
-        }
-        @media (max-width: 768px) { 
-    .hamburger { display: block; }
-    nav ul { 
-        display: none; 
-        flex-direction: column; 
-        position: absolute; 
-        top: 60px; 
-        right: 20px; /* Mueve al lateral derecho */
-        background: #004080; 
-        width: 150px; 
-        padding: 10px; 
-        border-radius: 5px; 
-    }
-    nav ul.active { display: flex; }
-    nav li { margin: 10px 0; }
-    header { flex-direction: column; align-items: center; }
-    header img { margin: 10px 0; }
-    .hero { padding: 80px 20px 40px; }
-    .hero h1 { font-size: 2.5em; }
-    .hero p { font-size: 1.2em; }
-    .benefits { flex-direction: column; }
-    .benefit { max-width: 100%; }
-    .contact-form { padding: 15px; }
-    section { padding: 40px 20px; }
-    .section-image { margin: 10px 0; }
-    #contacto .section-image { max-width: 150px; }
-    .gallery { 
-        flex-direction: column; 
-        gap: 10px; 
-    }
-    .gallery .vertical { 
-        max-width: 100%; 
-    }
-    .gallery .horizontal { 
-        max-width: 100%; 
-    }
-}
-        footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-        }
+        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+        #login, #dashboard { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        form { display: flex; flex-direction: column; }
+        label { margin: 10px 0 5px; }
+        input, select, button { padding: 10px; margin-bottom: 10px; }
+        #output { margin-top: 20px; padding: 10px; background: #e0f7fa; border: 1px solid #00acc1; }
+        #deportistas { margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f2f2f2; }
+        .hidden { display: none; }
+        button.edit-btn { background: #4CAF50; color: white; }
+        button.update-btn { background: #2196F3; color: white; }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.querySelector('.hamburger');
-            const navUl = document.querySelector('nav ul');
-            hamburger.addEventListener('click', () => {
-                navUl.classList.toggle('active');
-            });
-            const navLinks = document.querySelectorAll('nav ul li a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    if (window.innerWidth <= 768) {
-                        navUl.classList.remove('active');
-                    }
-                });
-            });
-        });
-    </script>
 </head>
 <body>
-    <header>
-        <img src="https://i.imgur.com/aNReoxl.png" alt="MindSight Elite Logo" style="height: 40px;">
-        <span class="hamburger">&#9776;</span>
-        <nav>
-            <ul>
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#metodo">Método</a></li>
-                <li><a href="#proceso">Proceso</a></li>
-                <li><a href="#beneficios">Beneficios</a></li>
-                <li><a href="#creador">Creador</a></li>
-                <li><a href="#testimonios">Testimonios</a></li>
-                <li><a href="#faqs">FAQs</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
-    <section id="inicio" class="hero">
-        <h1>MindSight Elite</h1>
-        <img src="https://i.imgur.com/aNReoxl.png" alt="MindSight Elite Logo" class="logo-extra">
-        <p>En MindSight Elite, transformamos tu rendimiento deportivo y llevamos tu carrera al siguiente nivel. Imagina tu mente como un universo cuántico en expansión: resetea loops negativos obsoletos y entrelaza tu foco con victorias inevitables. Transforma bloqueos en oportunidades, alcanzando un rendimiento élite que trasciende lo físico. Ahora tienes la oportunidad de alcanzar tu máximo potencial. Alcanza resultados rápidos, sorprendentes y definitivos. Amplía tus herramientas emocionales y domina el tiempo, el juego y el espacio bajo presión.</p>
-        <img src="https://i.imgur.com/RVRWtWB.jpeg" alt="Atleta en meditación">
-        <a href="#metodo" class="cta">Descubre el Método</a>
-    </section>
-    <section id="metodo">
-        <img src="https://i.imgur.com/aNReoxl.png" alt="MindSight Elite Logo" class="section-image" style="max-width: 150px; margin: 0 auto 20px auto;">
-        <div class="section-content">
-            <h2 class="section-title">De Qué se Trata MindSight Elite</h2>
-            <p><strong>Despierta tu visión 360° y domina el juego con poder interior</strong></p>
-            <p>MindSight Elite 360 es un método revolucionario que libera emociones y bloqueos, aumenta tu energía vital y repara daños emocionales y físicos en deportistas de élite. MindSight Elite 360, desarrollado por un exfutbolista con años de experiencia en el campo, fusiona visualización avanzada, meditación guiada para respiro cuántico y técnicas de percepción 360° que entrelazan tus sentidos como partículas cuánticas. Imagina tu mente como un superordenador: libera emociones atascadas, accede a el y toma decisiones correctas en realidades paralelas de victoria. Las técnicas de percepción 360° ralentizan el tiempo en competición, potencian la intuición y fortalecen el alma.</p>
-            <p>¿Cómo funciona? Identifica y elimina programas limitantes como el miedo al fracaso o la falta de concentración, reemplazándolos con patrones de libertad y poder. Los cambios son rápidos, positivos y permanentes desde la primera sesión. Imagina sentir el partido en cámara lenta, para tomar la mejor decisión y liberar bloqueos que te frenaban – todo en un reset mental integral.</p>
-            <p><strong>No puedes elegir las lesiones o derrotas que te llegan, pero sí cómo te posicionas ante ellas: con visión total y fuerza interior.</strong></p>
-            <div class="benefits">
-                <div class="benefit">
-                    <i class="fas fa-eye"></i>
-                    <h3>VISIÓN 360°</h3>
-                    <p>Percepción total del entorno, como si vieras todo a la vez.</p>
-                </div>
-                <div class="benefit">
-                    <i class="fas fa-clock"></i>
-                    <h3>DOMINIO DEL TIEMPO</h3>
-                    <p>Siente el juego en cámara lenta para tomar la mejor decisión.</p>
-                </div>
-                <div class="benefit">
-                    <i class="fas fa-yin-yang"></i>
-                    <h3>FUERZA DEL ALMA</h3>
-                    <p>Supera traumas y alcanza equilibrio mental y emocional.</p>
-                </div>
-            </div>
-        </div>
-        <img src="https://i.imgur.com/iq9Sh0t.jpeg" alt="Método MindSight" class="section-image">
-    </section>
-    <section id="proceso">
-        <div class="section-content">
-            <h2 class="section-title">El Proceso de MindSight Elite</h2>
-            <p><strong>Transforma bloqueos en poder: el método que te da la ventaja definitiva.</strong></p>
-            <div class="process">
-                <ol>
-                    <li><strong>Preparación e identificación:</strong> Comparte desafíos como ansiedad, traumas o falta de foco. Aquí, identificamos loops negativos como virus en un software mental obsoleto, usando ejercicios conscientes para resetear y aplicar 'entropía cognitiva' – convirtiendo caos en orden.</li>
-                    <li><strong>Liberación de bloqueos:</strong> Con visión 360° y meditación guiada, eliminamos bloqueos como si desacopláramos sensores ilusorios. Siente mejoras inmediatas: el tiempo se detiene, el peso se levanta y el fracaso queda atrás.</li>
-                    <li><strong>Reprogramación:</strong> Reemplaza patrones limitantes y loops de retroalimentación que mutan errores en upgrades evolutivos y positivos. Potenciando tu intuición y tomando decisiones más rápidas en el terreno de juego.</li>
-                    <li><strong>Transformación:</strong> Integra mente, cuerpo y emociones en una mente universal, operando como singularidad focal que atrae victorias inevitables. Resultados: Bienestar integral, calma, mayor intuición, poder de decisión y respuestas nuevas e innovadoras ante el estrés o la presión.</li>
-                </ol>
-                <p>Cada sesión dura 60-90 minutos, personalizada para tu deporte. Estas sesiones se imparten de manera presencial, ya que la interacción directa con el coach maximiza la eficacia del método. Las evidencias científicas destacan que la vibración de la voz, la resonancia y el lenguaje no verbal en un entorno presencial potencian la conexión emocional y la absorción del mensaje, asegurando resultados más profundos y duraderos en comparación con formatos en línea o grabados.</p>
-            </div>
-        </div>
-        <img src="https://i.imgur.com/EPnJYFT.jpeg" alt="Proceso MindSight" class="section-image">
-    </section>
-    <section id="beneficios">
-        <div class="section-content">
-            <h2 class="section-title">Beneficios de MindSight Elite</h2>
-            <p><strong>Libera tu energía bloqueada y conquista el podio con MindSight Elite 360.</strong></p>
-            <p>Transforma tu rendimiento deportivo de forma inmediata y definitiva con beneficios que marcan la diferencia:</p>
-            <ul>
-                <li><strong>Liberación emocional:</strong> Elimina traumas, ansiedad y bloqueos que afectan tu juego, aumentando tu energía.</li>
-                <li><strong>Claridad y foco:</strong> Activa la visión 360° para ver oportunidades que otros no ven, mejorando decisiones bajo presión. Intuición potenciada mediante entrelazamiento mental, creando realidades ganadoras.</li>
-                <li><strong>Equilibrio mente-cuerpo:</strong> Supera lesiones que en muchos casos tienen origen mental, fortaleciendo tu resiliencia y alma.</li>
-                <li><strong>Autonomía y liderazgo:</strong> Desarrolla responsabilidad personal y habilidades para liderar.</li>
-                <li><strong>Resultados rápidos:</strong> Cambios perceptibles desde la primera sesión, con una transformación completa en 10 sesiones.</li>
-            </ul>
-        </div>
-        <img src="https://i.imgur.com/1FS8bQe.jpeg" alt="Beneficios MindSight" class="section-image">
-    </section>
-    <section id="creador">
-        <div class="section-content">
-            <h2 class="section-title">Creador - José Pablo Cañete</h2>
-            <p>Hola, soy José Pablo Cañete, creador de MindSight Elite. Como exjugador de fútbol, que ha pertenecido a clubes como Sevilla FC SAD, Málaga CF SAD o Guaraní FC, enfrenté fuertes desafíos emocionales y físicos que afectaron mi carrera. A raíz de esta experiencia y tras investigaciones durante años en varias disciplinas y métodos, descubrí cómo reprogramar el sistema mental y emocional, fusionando experiencia real con hacks mentales no tradicionales, logrando un rendimiento óptimo en el campo. Desde 2025, he aplicado este método en atletas, obteniendo resultados a nivel mental y emocional, transformando sus carreras deportivas. Contamos con más de 50 deportistas tratados.</p>
-            <img src="https://i.imgur.com/rDsl7jj.png" alt="José Pablo Cañete - MindSight Elite Collage" class="section-image">
-        </div>
-    </section>
-    <section id="testimonios">
-        <div class="section-content">
-            <h2 class="section-title">Testimonios</h2>
-            <p>Escucha a deportistas que han expandido su mente a través de MindSight Elite: invirtiendo tiempo mental para colapsar ansiedades y crear bucles causales de victoria. Sus transformaciones demuestran cómo el fracaso cibernético se convierte en ascensión dimensional. MindSight Elite ha cambiado carreras y vidas de deportistas.</p>
-            <div>
-                <p>"MindSight Elite cambió mi carrera. Ahora veo el juego antes que nadie, como si el tiempo se detuviera. También ha cambiado mi vida personal."</p>
-                <span>- Jose Jimenez, futbolista</span>
-            </div>
-            <div>
-                <p>"La intuición que gané me dio la ventaja definitiva en partidos clave. El trabajo con el alma me ayudó a superar lesiones que pensé eran físicas."</p>
-                <span>- María Gómez, Tenista </span>
-            </div>
-            <div>
-                <p>"Como futbolista, la visión mental 360 activó algo en mí que no sabía que tenía. Ahora domino el campo con calma total."</p>
-                <span>- Fabian Campos, Jugador de Fútbol</span>
-            </div>
-        </div>
-    </section>
-    <section id="faqs">
-        <div class="section-content">
-            <h2 class="section-title">Preguntas Frecuentes</h2>
-            <div class="faq">
-                <h3>¿Cómo puede MindSight Elite mejorar mi rendimiento en competencia?</h3>
-                <p>Al activar la visión mental 360° y dominar el tiempo, toma decisiones más rápidas y precisas bajo presión.</p>
-            </div>
-            <div class="faq">
-                <h3>¿Es adecuado para superar traumas emocionales en el deporte?</h3>
-                <p>Sí, las meditaciones guiadas ayudan a liberar bloqueos emocionales deportivos y de la vida en general, para así lograr fortalecer el alma para un rendimiento imbatible.</p>
-            </div>
-            <div class="faq">
-                <h3>¿Cuánto tiempo tarda en ver resultados?</h3>
-                <p>Los cambios se notan inmediatamente, con resultados definitivos en las 10 sesiones.</p>
-            </div>
-            <div class="faq">
-                <h3>¿Puedo aplicarlo en equipo para mejorar la cohesión grupal?</h3>
-                <p>Sí, MindSight Elite promueve relaciones constructivas y liderazgo en equipo, aunque lo recomendado son sesiones individuales, para trabajar los bloqueos de forma personalizada, ya que, no todo el mundo avanza a la misma velocidad.</p>
-            </div>
-            <div class="faq">
-                <h3>¿Puede aplicarse en deportistas infantiles y junior?</h3>
-                <p>Sí, MindSight Elite está pensado para cualquier deportista, sin importar la edad.</p>
-            </div>
-            <div class="faq">
-                <h3>No soy deportista ¿me interesa este método?</h3>
-                <p>Sí, MindSight Elite está diseñado para el deporte, pero es aplicable a cualquier persona que desee avanzar en su vida, ya sea a nivel personal o profesional.</p>
-            </div>
-            <div class="faq">
-                <h3>¿Tengo que desplazarme a vuestras instalaciones?</h3>
-                <p>Las sesiones, recomendamos que sean en nuestras instalaciones, pero se pueden llevar a cabo en las instalaciones del club o casa del deportista.</p>
-            </div>
-            <div class="faq">
-                <h3>¿Es necesario tener experiencia previa en meditación?</h3>
-                <p>No, MindSight Elite está diseñado para todos los niveles, y el coach te guiará desde el principio sin necesidad de experiencia previa.</p>
-            </div>
-        </div>
-    </section>
-    <section id="contacto">
-        <img src="https://i.imgur.com/jJ0Ogpr.jpeg" alt="Contacto MindSight" class="section-image" style="max-width: 200px; margin: 0 auto 20px auto;">
-        <div class="section-content">
-            <h2 class="section-title">Contacto</h2>
-            <p>Si tienes alguna consulta o duda, estaremos encantados de responder a tus preguntas. Puedes escribirnos directamente a <a href="mailto:metodomse360@gmail.com">metodomse360@gmail.com</a>.</p>
-            <p>Siempre leemos y respondemos cada uno de los correos que llegan a nosotros.</p>
-            <div class="contact-form">
-                <form action="https://formspree.io/f/myzdoolz" method="POST">
-                    <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" required>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                    <label for="mensaje">Mensaje:</label>
-                    <textarea id="mensaje" name="mensaje" required></textarea>
-                    <button type="submit" class="cta">Enviar Mensaje</button>
-                </form>
-            </div>
-        </div>
-    </section>
-    <footer>
-        © 2025 MindSight Elite | Entrenamiento Mental de Alto Rendimiento | metodomse360@gmail.com
-<a href="admin.html" style="display:none;">Admin Dashboard</a>
+
+    <div id="login">
+        <h2>Login Admin</h2>
+        <form id="loginForm">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" required>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Ingresar</button>
+        </form>
+    </div>
+
+    <div id="dashboard" class="hidden">
+        <h2>Dashboard Admin - MindSight Elite 360</h2>
+        
+        <!-- Formulario para Datos de Deportista -->
+        <h3>Agregar/Editar Deportista</h3>
+        <form id="athleteForm">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" required>
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" required>
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" required>
+            <label for="mail">Email:</label>
+            <input type="email" id="mail" required>
+            <label for="deporte">Deporte:</label>
+            <input type="text" id="deporte" required>
+            <label for="fecha_nacimiento">Fecha de Nacimiento (YYYY-MM-DD):</label>
+            <input type="date" id="fecha_nacimiento" required>
+            <label for="hora_nacimiento">Hora de Nacimiento (HH:MM):</label>
+            <input type="time" id="hora_nacimiento" required>
+            <button type="submit" id="athleteSubmitBtn">Guardar Deportista</button>
+        </form>
+
+        <!-- Lista de Deportistas Guardados -->
+        <h3>Deportistas Registrados</h3>
+        <table id="athletesTable">
+            <thead>
+                <tr>
+                    <th>Nombre Completo</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>Deporte</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Hora Nacimiento</th>
+                    <th>Nº Análisis</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button id="exportButton">Exportar Datos (CSV)</button>
+
+        <!-- Formulario para Análisis de Objeto -->
+        <h3>Análisis de Objeto</h3>
+        <form id="analysisForm">
+            <label for="deportistaSelect">Seleccionar Deportista:</label>
+            <select id="deportistaSelect" required>
+                <option value="">-- Elegir --</option>
+            </select>
+            <label for="objeto">Objeto:</label>
+            <select id="objeto" required>
+                <option value="espejo">Espejo</option>
+                <option value="puerta">Puerta</option>
+                <option value="reloj">Reloj</option>
+                <option value="libro">Libro</option>
+                <option value="rio">Río</option>
+                <option value="vela">Vela</option>
+                <option value="puente">Puente</option>
+                <option value="llave">Llave</option>
+                <option value="coche">Coche</option>
+                <option value="casa">Casa</option>
+            </select>
+            <label for="estado">Estado:</label>
+            <select id="estado" required>
+                <!-- Opciones se llenan dinámicamente -->
+            </select>
+            <label for="color">Color:</label>
+            <select id="color" required>
+                <option value="dorado">Dorado</option>
+                <option value="negro">Negro</option>
+                <option value="blanco">Blanco</option>
+                <option value="rojo">Rojo</option>
+                <option value="azul">Azul</option>
+                <option value="rosa">Rosa</option>
+                <option value="violeta">Violeta</option>
+            </select>
+            <label for="textura">Textura:</label>
+            <select id="textura" required>
+                <option value="lisa">Lisa</option>
+                <option value="aspera">Áspera</option>
+                <option value="pegajosa">Pegajosa</option>
+                <option value="fria">Fría</option>
+                <option value="caliente">Caliente</option>
+            </select>
+            <label for="tamaño">Tamaño:</label>
+            <select id="tamaño" required>
+                <option value="pequeño">Pequeño</option>
+                <option value="mediano">Mediano</option>
+                <option value="grande">Grande</option>
+            </select>
+            <button type="submit">Analizar</button>
+        </form>
+        <div id="analysisOutput"></div>
+
+        <button onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <script>
+        // Datos para análisis (completo para todos objetos)
+        const objects = {
+            "espejo": "Ego/Auto-percepción",
+            "puerta": "Transiciones/Cambio",
+            "reloj": "Relación con el Tiempo",
+            "libro": "Infancia/Aprendizaje",
+            "rio": "Emociones/Flujo",
+            "vela": "Esperanza/Espiritualidad",
+            "puente": "Relaciones/Conexiones",
+            "llave": "Acceso/Secretos",
+            "coche": "Autonomía/Independencia",
+            "casa": "Familia/Hogar Interno"
+        };
+
+        const states = {
+            "espejo": {
+                "nuevo": ["Confianza en la autoimagen", "¿Qué te hace sentir seguro? Usa esa confianza."],
+                "roto": ["Autoimagen dañada, trauma", "¿Qué dañó cómo te ves? Imagina reparar el espejo."],
+                "sucio": ["Confusión sobre la identidad", "¿Qué te impide verte claro? Visualiza limpiar."],
+                "antiguo": ["Apego al pasado", "¿Qué recuerdo define tu autoimagen? Reescribe."]
+            },
+            "puerta": {
+                "abierta": ["Disposición al cambio", "¿Qué te motiva a avanzar? Usa esa energía."],
+                "cerrada": ["Miedo al cambio, resistencia", "¿Qué te frena? Visualiza abrir la puerta."],
+                "rota": ["Obstáculos en transiciones", "¿Qué bloqueó un cambio? Repara la puerta."],
+                "sólida": ["Seguridad en decisiones", "¿Qué te da estabilidad? Usa esa fuerza."]
+            },
+            "reloj": {
+                "funcionando": ["Control sobre el tiempo", "¿Qué te da control? Usa eso."],
+                "parado": ["Estancamiento", "¿Qué te atrapó? Hazlo funcionar."],
+                "roto": ["Ansiedad por el tiempo", "¿Qué rompió el tiempo? Repara el reloj."],
+                "antiguo": ["Nostalgia", "¿Qué pasado revisitas? Imagina futuro."]
+            },
+            "libro": {
+                "nuevo": ["Curiosidad infantil", "¿Qué te emociona aprender? Usa eso."],
+                "desgastado": ["Experiencias vividas", "¿Qué recuerdos guardas?"],
+                "páginas en blanco": ["Potencial, incertidumbre", "¿Qué escribes? Crea una historia."],
+                "roto": ["Trauma infantil", "¿Qué se rompió en tu niñez? Reescribe."]
+            },
+            "rio": {
+                "tranquilo": ["Paz emocional", "¿Qué te calma? Usa eso."],
+                "turbulento": ["Conflictos emocionales", "¿Qué te abruma? Calma el río."],
+                "seco": ["Agotamiento emocional", "¿Qué te dejó vacío? Llena el río."],
+                "desbordado": ["Abrumado", "¿Qué te desborda? Estabiliza."]
+            },
+            "vela": {
+                "encendida": ["Esperanza", "¿Qué te ilumina? Usa esa luz."],
+                "apagada": ["Pérdida de motivación", "¿Qué apagó tu luz? Enciéndela."],
+                "derritiéndose": ["Agotamiento", "¿Qué te consume? Protege la vela."],
+                "intacta": ["Potencial", "¿Qué esperas para encender?"]
+            },
+            "puente": {
+                "sólido": ["Conexiones fuertes", "¿Qué relaciones te sostienen?"],
+                "inestable": ["Inseguridad en relaciones", "¿Qué relación es frágil? Repara."],
+                "en construcción": ["Esfuerzo por conectar", "¿Qué construyes en relaciones?"],
+                "antiguo": ["Vínculos pasados", "¿Qué vínculo pasado influye? Actualiza."]
+            },
+            "llave": {
+                "nueva": ["Oportunidades", "¿Qué abres? Usa eso."],
+                "oxidada": ["Bloqueos", "¿Qué te bloquea? Pule la llave."],
+                "rota": ["Frustración", "¿Qué solución perdiste? Nueva llave."],
+                "antigua": ["Secretos del pasado", "¿Qué secreto desbloqueas? Usa la llave."]
+            },
+            "coche": {
+                "nuevo": ["Confianza", "¿A dónde te lleva tu autonomía?"],
+                "averiado": ["Obstáculos", "¿Qué te frena? Repara el coche."],
+                "viejo": ["Resiliencia", "¿Qué te dio fuerza? Imagina nuevo."],
+                "sin combustible": ["Agotamiento", "¿Qué te dejó sin energía? Recarga."]
+            },
+            "casa": {
+                "sólida": ["Seguridad", "¿Qué te da paz? Usa eso."],
+                "en ruinas": ["Trauma familiar", "¿Qué se rompió en tu familia? Reconstruye."],
+                "en construcción": ["Crecimiento", "¿Qué reconstruyes?"],
+                "vacía": ["Soledad", "¿Qué ausencia sientes? Llena la casa."]
+            }
+        };
+
+        const colors = {
+            "dorado": ["Autoestima alta, éxito, valor", "¿Qué te hace sentir valioso? Visualiza brillar."],
+            "negro": ["Aislamiento, misterio, introspección profunda", "¿Qué te hace sentir oscuro o aislado? Imagina añadir luz."],
+            "blanco": ["Claridad, pureza, nuevo comienzo", "¿Qué te da paz o simplicidad? Reinicio del pasado."],
+            "rojo": ["Pasión, urgencia, emociones intensas", "¿Qué te hace sentir intenso? Visualiza calmar."],
+            "azul": ["Calma, estabilidad, serenidad", "¿Qué te da tranquilidad? Estabiliza."],
+            "rosa": ["Amor propio, vulnerabilidad, necesidad de afecto", "¿Qué te hace sentir vulnerable? Añade afecto."],
+            "violeta": ["Introspección, transformación, espiritualidad", "¿Qué te conecta con lo profundo? Transforma."]
+        };
+
+        const textures = {
+            "lisa": ["Armonía, fluidez emocional, confianza restaurada", "¿Qué te hace sentir en paz? Suaviza la superficie."],
+            "aspera": ["Conflictos internos, resistencia, heridas no sanadas", "¿Qué conflicto te irrita? Pule la aspereza."],
+            "pegajosa": ["Apegos emocionales, emociones estancadas, codependencia", "¿Qué te mantiene atado? Limpia la pegajosidad."],
+            "fria": ["Desconexión emocional, miedo, aislamiento", "¿Qué te hace sentir distante? Añade calor."],
+            "caliente": ["Conexión emocional, pasión restaurada, vitalidad", "¿Qué te da energía vital? Infunde calor."]
+        };
+
+        const sizes = {
+            "pequeño": ["Minimización, inseguridad, sentimiento de insignificancia", "¿Qué te hace sentir insuficiente? Visualiza agrandar."],
+            "mediano": ["Equilibrio, estabilidad emocional, neutralidad", "¿Qué te mantiene en balance? Ajusta para dinamismo."],
+            "grande": ["Abrumador, presión, importancia exagerada", "¿Qué te abruma? Visualiza reducir."]
+        };
+
+        // Login simple (cambia estos valores para producción)
+        const adminUser = "admin";
+        const adminPass = "mindsight123";
+
+        // Login Form
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const user = document.getElementById("username").value;
+            const pass = document.getElementById("password").value;
+            if (user === adminUser && pass === adminPass) {
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("dashboard").classList.remove("hidden");
+                loadAthletes();
+                loadAthleteSelect();
+            } else {
+                alert("Usuario o contraseña incorrectos.");
+            }
+        });
+
+        // Actualizar estados según objeto seleccionado
+        document.getElementById("objeto").addEventListener("change", function() {
+            const objeto = this.value;
+            const estadoSelect = document.getElementById("estado");
+            estadoSelect.innerHTML = "<option value=''>-- Elegir --</option>";
+            if (states[objeto]) {
+                Object.keys(states[objeto]).forEach(state => {
+                    const option = document.createElement("option");
+                    option.value = state;
+                    option.text = state.charAt(0).toUpperCase() + state.slice(1);
+                    estadoSelect.appendChild(option);
+                });
+            }
+        });
+
+        // Disparar cambio inicial para llenar estados del primer objeto
+        document.getElementById("objeto").dispatchEvent(new Event("change"));
+
+        // Logout
+        function logout() {
+            document.getElementById("dashboard").classList.add("hidden");
+            document.getElementById("login").classList.remove("hidden");
+        }
+
+        // Athlete Form - Add or Edit
+        let editingAthleteId = null;
+        document.getElementById("athleteForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const athlete = {
+                nombre: document.getElementById("nombre").value,
+                apellidos: document.getElementById("apellidos").value,
+                telefono: document.getElementById("telefono").value,
+                mail: document.getElementById("mail").value,
+                deporte: document.getElementById("deporte").value,
+                fecha_nacimiento: document.getElementById("fecha_nacimiento").value,
+                hora_nacimiento: document.getElementById("hora_nacimiento").value,
+                analyses: editingAthleteId ? (JSON.parse(localStorage.getItem("athletes"))[editingAthleteId].analyses || []) : []
+            };
+            let athletes = JSON.parse(localStorage.getItem("athletes")) || [];
+            if (editingAthleteId !== null) {
+                athletes[editingAthleteId] = athlete;
+                document.getElementById("athleteSubmitBtn").textContent = "Guardar Deportista";
+                editingAthleteId = null;
+            } else {
+                athletes.push(athlete);
+            }
+            localStorage.setItem("athletes", JSON.stringify(athletes));
+            loadAthletes();
+            loadAthleteSelect();
+            document.getElementById("athleteForm").reset();
+        });
+
+        // Load Athletes Table with Edit Button
+        function loadAthletes() {
+            const tableBody = document.getElementById("athletesTable").querySelector("tbody");
+            tableBody.innerHTML = "";
+            let athletes = JSON.parse(localStorage.getItem("athletes")) || [];
+            athletes.forEach((athlete, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${athlete.nombre} ${athlete.apellidos}</td>
+                    <td>${athlete.telefono}</td>
+                    <td>${athlete.mail}</td>
+                    <td>${athlete.deporte}</td>
+                    <td>${athlete.fecha_nacimiento}</td>
+                    <td>${athlete.hora_nacimiento}</td>
+                    <td>${athlete.analyses ? athlete.analyses.length : 0}</td>
+                    <td><button class="edit-btn" onclick="editAthlete(${index})">Editar</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Edit Athlete
+        function editAthlete(index) {
+            let athletes = JSON.parse(localStorage.getItem("athletes")) || [];
+            const athlete = athletes[index];
+            document.getElementById("nombre").value = athlete.nombre;
+            document.getElementById("apellidos").value = athlete.apellidos;
+            document.getElementById("telefono").value = athlete.telefono;
+            document.getElementById("mail").value = athlete.mail;
+            document.getElementById("deporte").value = athlete.deporte;
+            document.getElementById("fecha_nacimiento").value = athlete.fecha_nacimiento;
+            document.getElementById("hora_nacimiento").value = athlete.hora_nacimiento;
+            document.getElementById("athleteSubmitBtn").textContent = "Actualizar Deportista";
+            editingAthleteId = index;
+        }
+
+        // Load Athlete Select for Analysis
+        function loadAthleteSelect() {
+            const select = document.getElementById("deportistaSelect");
+            select.innerHTML = "<option value=''>-- Elegir Deportista --</option>";
+            let athletes = JSON.parse(localStorage.getItem("athletes")) || [];
+            athletes.forEach((athlete, index) => {
+                const option = document.createElement("option");
+                option.value = index;
+                option.text = `${athlete.nombre} ${athlete.apellidos} (${athlete.deporte})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Analysis Form - Save to Athlete
+        document.getElementById("analysisForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const athleteIndex = document.getElementById("deportistaSelect").value;
+            if (athleteIndex === "") {
+                alert("Selecciona un deportista para vincular el análisis.");
+                return;
+            }
+            const obj = document.getElementById("objeto").value;
+            const st = document.getElementById("estado").value;
+            const col = document.getElementById("color").value;
+            const tex = document.getElementById("textura").value;
+            const siz = document.getElementById("tamaño").value;
+
+            // Generate analysis (same as before)
+            const psique = objects[obj] || "No encontrado";
+            const stateData = states[obj] ? states[obj][st] : null;
+            const stateInterp = stateData ? stateData[0] : "No encontrado";
+            const stateGuide = stateData ? stateData[1] : "";
+            const colorData = colors[col] || ["No encontrado", ""];
+            const colorInterp = colorData[0];
+            const colorGuide = colorData[1];
+            const textureData = textures[tex] || ["No encontrado", ""];
+            const textureInterp = textureData[0];
+            const textureGuide = textureData[1];
+            const sizeData = sizes[siz] || ["No encontrado", ""];
+            const sizeInterp = sizeData[0];
+            const sizeGuide = sizeData[1];
+
+            const symbolism = `El ${obj} (${psique}) en estado ${st} (${stateInterp}) con color ${col} (${colorInterp}), textura ${tex} (${textureInterp}) y tamaño ${siz} (${sizeInterp}) simboliza una combinación de ${stateInterp.toLowerCase()} influenciada por ${colorInterp.toLowerCase()}, ${textureInterp.toLowerCase()} y ${sizeInterp.toLowerCase()}. Esto representa un trauma emocional relacionado con ${psique.toLowerCase()}.`;
+
+            const trauma = `Posible trauma: ${stateInterp} agravado por ${colorInterp.toLowerCase()} (e.g., ${colorGuide.split('?')[0]}?), con sensación de ${textureInterp.toLowerCase()} (e.g., ${textureGuide.split('?')[0]}?) y percepción de ${sizeInterp.toLowerCase()} (e.g., ${sizeGuide.split('?')[0]}?). En la vida general, esto puede causar ${sizeInterp.toLowerCase()} en ${psique.toLowerCase()}, como inseguridad o abrumo. En deporte, afecta rendimiento por ${stateInterp.toLowerCase()} emocional, e.g., dudas en decisiones.`;
+
+            const questions = `Preguntas para explorar: ${stateGuide} ${colorGuide} ${textureGuide} ${sizeGuide}`;
+
+            const healing = `Cómo sanarlo: Libera con respiración cuadrada y gratitud al cuerpo. Re-visualiza el ${obj} en estado positivo (e.g., nuevo/intacto), color dorado (éxito), textura lisa/caliente (armonía/conexión), tamaño mediano (equilibrio), limpio, reluciente, con marco/orilla dorada reflejando victoria. Integra afirmaciones: 'Soy ${psique.toLowerCase()} equilibrado y poderoso'.`;
+
+            // Save analysis to athlete
+            let athletes = JSON.parse(localStorage.getItem("athletes")) || [];
+            const analysis = {
+                objeto: obj,
+                estado: st,
+                color: col,
+                textura: tex,
+                tamaño: siz,
+                simbolismo: symbolism,
+                trauma: trauma,
+                preguntas: questions,
+                sanacion: healing,
+                fecha: new Date().toISOString().split('T')[0] // Fecha actual
+            };
+            athletes[athleteIndex].analyses = athletes[athleteIndex].analyses || [];
+            athletes[athleteIndex].analyses.push(analysis);
+            localStorage.setItem("athletes", JSON.stringify(athletes));
+            loadAthletes(); // Actualiza tabla con nº análisis
+
+            // Display result
+            document.getElementById("analysisOutput").innerHTML = `
+                <h4>Análisis Guardado para ${athletes[athleteIndex].nombre} ${athletes[athleteIndex].apellidos}:</h4>
+                <p><strong>Representación/Simbolismo:</strong> ${symbolism}</p>
+                <p><strong>Significado y Trauma:</strong> ${trauma}</p>
+                <p><strong>Preguntas para Explorar:</strong> ${questions}</p>
+                <p><strong>Cómo Sanarlo:</strong> ${healing}</p>
+            `;
+            document.getElementById("analysisForm").reset();
+            document.getElementById("objeto").dispatchEvent(new Event("change"));
+        });
+
+        // Export CSV
+        document.getElementById("exportButton").addEventListener("click", function() {
+            let athletes = JSON.parse(localStorage.getItem("athletes")) || [];
+            let csv = "Nombre,Apellidos,Telefono,Email,Deporte,Fecha Nacimiento,Hora Nacimiento,Objeto,Estado,Color,Textura,Tamaño,Simbolismo,Trauma,Preguntas,Sanacion,Fecha\n";
+            athletes.forEach(athlete => {
+                if (athlete.analyses && athlete.analyses.length > 0) {
+                    athlete.analyses.forEach(analysis => {
+                        csv += `"${athlete.nombre}","${athlete.apellidos}","${athlete.telefono}","${athlete.mail}","${athlete.deporte}","${athlete.fecha_nacimiento}","${athlete.hora_nacimiento}","${analysis.objeto}","${analysis.estado}","${analysis.color}","${analysis.textura}","${analysis.tamaño}","${analysis.simbolismo}","${analysis.trauma}","${analysis.preguntas}","${analysis.sanacion}","${analysis.fecha}"\n`;
+                    });
+                } else {
+                    csv += `"${athlete.nombre}","${athlete.apellidos}","${athlete.telefono}","${athlete.mail}","${athlete.deporte}","${athlete.fecha_nacimiento}","${athlete.hora_nacimiento}","","","","","","","","","","\n`;
+                }
+            });
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "deportistas_con_analisis.csv";
+            a.click();
+        });
+    </script>
+
 </body>
-
-
-
-
-
-
+</html>

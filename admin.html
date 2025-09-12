@@ -11,11 +11,13 @@
         label { margin: 10px 0 5px; }
         input, select, button { padding: 10px; margin-bottom: 10px; }
         #output { margin-top: 20px; padding: 10px; background: #e0f7fa; border: 1px solid #00acc1; }
-        #deportistas { margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; }
+        #deportistas, #analyses { margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background: #f2f2f2; }
         .hidden { display: none; }
+        button { background: #007cba; color: white; border: none; cursor: pointer; }
+        button:hover { background: #005a87; }
     </style>
 </head>
 <body>
@@ -54,25 +56,55 @@
             <button type="submit">Guardar Deportista</button>
         </form>
 
+        <!-- Formulario para Editar Deportista -->
+        <h3>Editar Deportista</h3>
+        <form id="editAthleteForm">
+            <label for="editId">Seleccionar Deportista por ID:</label>
+            <select id="editId" required>
+                <option value="">-- Elegir --</option>
+            </select>
+            <label for="editNombre">Nombre:</label>
+            <input type="text" id="editNombre">
+            <label for="editApellidos">Apellidos:</label>
+            <input type="text" id="editApellidos">
+            <label for="editTelefono">Teléfono:</label>
+            <input type="tel" id="editTelefono">
+            <label for="editMail">Email:</label>
+            <input type="email" id="editMail">
+            <label for="editDeporte">Deporte:</label>
+            <input type="text" id="editDeporte">
+            <label for="editFechaNacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="editFechaNacimiento">
+            <label for="editHoraNacimiento">Hora de Nacimiento:</label>
+            <input type="time" id="editHoraNacimiento">
+            <button type="submit">Actualizar Deportista</button>
+        </form>
+
         <!-- Lista de Deportistas Guardados -->
         <h3>Deportistas Registrados</h3>
         <table id="athletesTable">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Nombre Completo</th>
                     <th>Teléfono</th>
                     <th>Email</th>
                     <th>Deporte</th>
                     <th>Fecha Nacimiento</th>
                     <th>Hora Nacimiento</th>
+                    <th>Análisis Realizados</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
 
-        <!-- Formulario para Análisis de Objeto -->
-        <h3>Análisis de Objeto</h3>
+        <!-- Formulario para Análisis de Objeto (vinculado a deportista) -->
+        <h3>Análisis de Objeto (Vinculado a Deportista)</h3>
         <form id="analysisForm">
+            <label for="athleteIdForAnalysis">Seleccionar Deportista:</label>
+            <select id="athleteIdForAnalysis" required>
+                <option value="">-- Elegir --</option>
+            </select>
             <label for="objeto">Objeto:</label>
             <select id="objeto" required>
                 <option value="espejo">Espejo</option>
@@ -87,7 +119,9 @@
                 <option value="casa">Casa</option>
             </select>
             <label for="estado">Estado:</label>
-            <input type="text" id="estado" required placeholder="e.g., roto">
+            <select id="estado" required>
+                <!-- Opciones se llenan dinámicamente -->
+            </select>
             <label for="color">Color:</label>
             <select id="color" required>
                 <option value="dorado">Dorado</option>
@@ -112,15 +146,38 @@
                 <option value="mediano">Mediano</option>
                 <option value="grande">Grande</option>
             </select>
-            <button type="submit">Analizar</button>
+            <button type="submit">Analizar y Guardar</button>
         </form>
         <div id="analysisOutput"></div>
 
+        <!-- Tabla de Análisis por Deportista -->
+        <h3>Análisis por Deportista</h3>
+        <select id="viewAthlete" onchange="loadAnalyses()">
+            <option value="">-- Elegir Deportista --</option>
+        </select>
+        <table id="analysesTable" class="hidden">
+            <thead>
+                <tr>
+                    <th>Objeto</th>
+                    <th>Estado</th>
+                    <th>Color</th>
+                    <th>Textura</th>
+                    <th>Tamaño</th>
+                    <th>Simbolismo</th>
+                    <th>Trauma</th>
+                    <th>Fecha Análisis</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <!-- Botones de Acción -->
+        <button onclick="exportData()">Exportar Datos (CSV)</button>
         <button onclick="logout()">Cerrar Sesión</button>
     </div>
 
     <script>
-        // Datos para análisis (convertido del Python script)
+        // Datos para análisis (completo de tu sistema)
         const objects = {
             "espejo": "Ego/Auto-percepción",
             "puerta": "Transiciones/Cambio",
@@ -145,16 +202,66 @@
                 "abierta": ["Disposición al cambio", "¿Qué te motiva a avanzar? Usa esa energía."],
                 "cerrada": ["Miedo al cambio, resistencia", "¿Qué te frena? Visualiza abrir la puerta."],
                 "rota": ["Obstáculos en transiciones", "¿Qué bloqueó un cambio? Repara la puerta."],
-                "solida": ["Seguridad en decisiones", "¿Qué te da estabilidad? Usa esa fuerza."]
+                "sólida": ["Seguridad en decisiones", "¿Qué te da estabilidad? Usa esa fuerza."]
             },
-            // Agrega los demás estados como en el Python script...
-            // Nota: Por brevedad, copia el resto de 'states' del código Python anterior y adáptalo aquí.
+            "reloj": {
+                "funcionando": ["Control sobre el tiempo", "¿Qué te da control? Usa eso."],
+                "parado": ["Estancamiento", "¿Qué te atrapó? Hazlo funcionar."],
+                "roto": ["Ansiedad por el tiempo", "¿Qué rompió el tiempo? Repara el reloj."],
+                "antiguo": ["Nostalgia", "¿Qué pasado revisitas? Imagina futuro."]
+            },
+            "libro": {
+                "nuevo": ["Curiosidad infantil", "¿Qué te emociona aprender? Usa eso."],
+                "desgastado": ["Experiencias vividas", "¿Qué recuerdos guardas?"],
+                "páginas en blanco": ["Potencial, incertidumbre", "¿Qué escribes? Crea una historia."],
+                "roto": ["Trauma infantil", "¿Qué se rompió en tu niñez? Reescribe."]
+            },
+            "rio": {
+                "tranquilo": ["Paz emocional", "¿Qué te calma? Usa eso."],
+                "turbulento": ["Conflictos emocionales", "¿Qué te abruma? Calma el río."],
+                "seco": ["Agotamiento emocional", "¿Qué te dejó vacío? Llena el río."],
+                "desbordado": ["Abrumado", "¿Qué te desborda? Estabiliza."]
+            },
+            "vela": {
+                "encendida": ["Esperanza", "¿Qué te ilumina? Usa esa luz."],
+                "apagada": ["Pérdida de motivación", "¿Qué apagó tu luz? Enciéndela."],
+                "derritiéndose": ["Agotamiento", "¿Qué te consume? Protege la vela."],
+                "intacta": ["Potencial", "¿Qué esperas para encender?"]
+            },
+            "puente": {
+                "sólido": ["Conexiones fuertes", "¿Qué relaciones te sostienen?"],
+                "inestable": ["Inseguridad en relaciones", "¿Qué relación es frágil? Repara."],
+                "en construcción": ["Esfuerzo por conectar", "¿Qué construyes en relaciones?"],
+                "antiguo": ["Vínculos pasados", "¿Qué vínculo pasado influye? Actualiza."]
+            },
+            "llave": {
+                "nueva": ["Oportunidades", "¿Qué abres? Usa eso."],
+                "oxidada": ["Bloqueos", "¿Qué te bloquea? Pule la llave."],
+                "rota": ["Frustración", "¿Qué solución perdiste? Nueva llave."],
+                "antigua": ["Secretos del pasado", "¿Qué secreto desbloqueas? Usa la llave."]
+            },
+            "coche": {
+                "nuevo": ["Confianza", "¿A dónde te lleva tu autonomía?"],
+                "averiado": ["Obstáculos", "¿Qué te frena? Repara el coche."],
+                "viejo": ["Resiliencia", "¿Qué te dio fuerza? Imagina nuevo."],
+                "sin combustible": ["Agotamiento", "¿Qué te dejó sin energía? Recarga."]
+            },
+            "casa": {
+                "sólida": ["Seguridad", "¿Qué te da paz? Usa eso."],
+                "en ruinas": ["Trauma familiar", "¿Qué se rompió en tu familia? Reconstruye."],
+                "en construcción": ["Crecimiento", "¿Qué reconstruyes?"],
+                "vacía": ["Soledad", "¿Qué ausencia sientes? Llena la casa."]
+            }
         };
 
         const colors = {
             "dorado": ["Autoestima alta, éxito, valor", "¿Qué te hace sentir valioso? Visualiza brillar."],
             "negro": ["Aislamiento, misterio, introspección profunda", "¿Qué te hace sentir oscuro o aislado? Imagina añadir luz."],
-            // Agrega los demás colores...
+            "blanco": ["Claridad, pureza, nuevo comienzo", "¿Qué te da paz o simplicidad? Reinicio del pasado."],
+            "rojo": ["Pasión, urgencia, emociones intensas", "¿Qué te hace sentir intenso? Visualiza calmar."],
+            "azul": ["Calma, estabilidad, serenidad", "¿Qué te da tranquilidad? Estabiliza."],
+            "rosa": ["Amor propio, vulnerabilidad, necesidad de afecto", "¿Qué te hace sentir vulnerable? Añade afecto."],
+            "violeta": ["Introspección, transformación, espiritualidad", "¿Qué te conecta con lo profundo? Transforma."]
         };
 
         const textures = {
@@ -171,11 +278,10 @@
             "grande": ["Abrumador, presión, importancia exagerada", "¿Qué te abruma? Visualiza reducir."]
         };
 
-        // Login simple (cambia estos valores para producción)
+        // Login simple
         const adminUser = "admin";
         const adminPass = "mindsight123";
 
-        // Login Form
         document.getElementById("loginForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const user = document.getElementById("username").value;
@@ -184,64 +290,170 @@
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("dashboard").classList.remove("hidden");
                 loadAthletes();
+                loadAthleteSelects();
             } else {
                 alert("Usuario o contraseña incorrectos.");
             }
         });
 
-        // Logout
         function logout() {
             document.getElementById("dashboard").classList.add("hidden");
             document.getElementById("login").classList.remove("hidden");
         }
 
-        // Athlete Form - Save to localStorage
+        // Actualizar estados según objeto
+        document.getElementById("objeto").addEventListener("change", function() {
+            const objeto = this.value;
+            const estadoSelect = document.getElementById("estado");
+            estadoSelect.innerHTML = "<option value=''>-- Selecciona --</option>";
+            if (states[objeto]) {
+                Object.keys(states[objeto]).forEach(state => {
+                    const option = document.createElement("option");
+                    option.value = state;
+                    option.text = state.charAt(0).toUpperCase() + state.slice(1);
+                    estadoSelect.appendChild(option);
+                });
+            }
+        });
+
+        // Disparar cambio inicial
+        document.getElementById("objeto").dispatchEvent(new Event("change"));
+
+        // Llenar selects para editar y análisis
+        function loadAthleteSelects() {
+            const athletes = getAthletes();
+            const editSelect = document.getElementById("editId");
+            const analysisSelect = document.getElementById("athleteIdForAnalysis");
+            const viewSelect = document.getElementById("viewAthlete");
+            editSelect.innerHTML = "<option value=''>-- Elegir --</option>";
+            analysisSelect.innerHTML = "<option value=''>-- Elegir --</option>";
+            viewSelect.innerHTML = "<option value=''>-- Elegir --</option>";
+            athletes.forEach(athlete => {
+                const optionEdit = document.createElement("option");
+                optionEdit.value = athlete.id;
+                optionEdit.text = `${athlete.nombre} ${athlete.apellidos}`;
+                editSelect.appendChild(optionEdit);
+
+                const optionAnalysis = document.createElement("option");
+                optionAnalysis.value = athlete.id;
+                optionAnalysis.text = `${athlete.nombre} ${athlete.apellidos}`;
+                analysisSelect.appendChild(optionAnalysis);
+
+                const optionView = document.createElement("option");
+                optionView.value = athlete.id;
+                optionView.text = `${athlete.nombre} ${athlete.apellidos}`;
+                viewSelect.appendChild(optionView);
+            });
+        }
+
+        // Get Athletes from localStorage
+        function getAthletes() {
+            return JSON.parse(localStorage.getItem("athletes")) || [];
+        }
+
+        // Athlete Form - Save to localStorage with ID
         document.getElementById("athleteForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const athlete = {
+                id: Date.now().toString(), // ID único basado en timestamp
                 nombre: document.getElementById("nombre").value,
                 apellidos: document.getElementById("apellidos").value,
                 telefono: document.getElementById("telefono").value,
                 mail: document.getElementById("mail").value,
                 deporte: document.getElementById("deporte").value,
                 fecha_nacimiento: document.getElementById("fecha_nacimiento").value,
-                hora_nacimiento: document.getElementById("hora_nacimiento").value
+                hora_nacimiento: document.getElementById("hora_nacimiento").value,
+                analyses: [] // Sub-array para análisis
             };
-            let athletes = JSON.parse(localStorage.getItem("athletes")) || [];
+            let athletes = getAthletes();
             athletes.push(athlete);
             localStorage.setItem("athletes", JSON.stringify(athletes));
             loadAthletes();
+            loadAthleteSelects();
             document.getElementById("athleteForm").reset();
+            alert("Deportista guardado.");
         });
 
-        // Load Athletes Table
+        // Edit Athlete Form
+        document.getElementById("editAthleteForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const id = document.getElementById("editId").value;
+            if (!id) {
+                alert("Selecciona un deportista.");
+                return;
+            }
+            let athletes = getAthletes();
+            const athlete = athletes.find(a => a.id === id);
+            if (athlete) {
+                athlete.nombre = document.getElementById("editNombre").value || athlete.nombre;
+                athlete.apellidos = document.getElementById("editApellidos").value || athlete.apellidos;
+                athlete.telefono = document.getElementById("editTelefono").value || athlete.telefono;
+                athlete.mail = document.getElementById("editMail").value || athlete.mail;
+                athlete.deporte = document.getElementById("editDeporte").value || athlete.deporte;
+                athlete.fecha_nacimiento = document.getElementById("editFechaNacimiento").value || athlete.fecha_nacimiento;
+                athlete.hora_nacimiento = document.getElementById("editHoraNacimiento").value || athlete.hora_nacimiento;
+                localStorage.setItem("athletes", JSON.stringify(athletes));
+                loadAthletes();
+                loadAthleteSelects();
+                document.getElementById("editAthleteForm").reset();
+                alert("Deportista actualizado.");
+            }
+        });
+
+        // Llenar formulario de edición cuando se selecciona ID
+        document.getElementById("editId").addEventListener("change", function() {
+            const id = this.value;
+            if (id) {
+                const athletes = getAthletes();
+                const athlete = athletes.find(a => a.id === id);
+                if (athlete) {
+                    document.getElementById("editNombre").value = athlete.nombre;
+                    document.getElementById("editApellidos").value = athlete.apellidos;
+                    document.getElementById("editTelefono").value = athlete.telefono;
+                    document.getElementById("editMail").value = athlete.mail;
+                    document.getElementById("editDeporte").value = athlete.deporte;
+                    document.getElementById("editFechaNacimiento").value = athlete.fecha_nacimiento;
+                    document.getElementById("editHoraNacimiento").value = athlete.hora_nacimiento;
+                }
+            }
+        });
+
+        // Load Athletes Table (con número de análisis)
         function loadAthletes() {
             const tableBody = document.getElementById("athletesTable").querySelector("tbody");
             tableBody.innerHTML = "";
-            let athletes = JSON.parse(localStorage.getItem("athletes")) || [];
+            const athletes = getAthletes();
             athletes.forEach(athlete => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
+                    <td>${athlete.id}</td>
                     <td>${athlete.nombre} ${athlete.apellidos}</td>
                     <td>${athlete.telefono}</td>
                     <td>${athlete.mail}</td>
                     <td>${athlete.deporte}</td>
                     <td>${athlete.fecha_nacimiento}</td>
                     <td>${athlete.hora_nacimiento}</td>
+                    <td>${athlete.analyses.length}</td>
                 `;
                 tableBody.appendChild(row);
             });
         }
 
-        // Analysis Form
+        // Analysis Form - Vinculado a deportista
         document.getElementById("analysisForm").addEventListener("submit", function(e) {
             e.preventDefault();
+            const athleteId = document.getElementById("athleteIdForAnalysis").value;
+            if (!athleteId) {
+                alert("Selecciona un deportista.");
+                return;
+            }
             const obj = document.getElementById("objeto").value;
             const st = document.getElementById("estado").value;
             const col = document.getElementById("color").value;
             const tex = document.getElementById("textura").value;
             const siz = document.getElementById("tamaño").value;
 
+            // Generar análisis
             const psique = objects[obj] || "No encontrado";
             const stateData = states[obj] ? states[obj][st] : null;
             const stateInterp = stateData ? stateData[0] : "No encontrado";
@@ -264,6 +476,29 @@
 
             const healing = `Cómo sanarlo: Libera con respiración cuadrada y gratitud al cuerpo. Re-visualiza el ${obj} en estado positivo (e.g., nuevo/intacto), color dorado (éxito), textura lisa/caliente (armonía/conexión), tamaño mediano (equilibrio), limpio, reluciente, con marco/orilla dorada reflejando victoria. Integra afirmaciones: 'Soy ${psique.toLowerCase()} equilibrado y poderoso'.`;
 
+            // Guardar análisis vinculado al deportista
+            let athletes = getAthletes();
+            const athleteIndex = athletes.findIndex(a => a.id === athleteId);
+            if (athleteIndex !== -1) {
+                const analysis = {
+                    objeto: obj,
+                    estado: st,
+                    color: col,
+                    textura: tex,
+                    tamaño: siz,
+                    symbolism: symbolism,
+                    trauma: trauma,
+                    questions: questions,
+                    healing: healing,
+                    date: new Date().toISOString()
+                };
+                athletes[athleteIndex].analyses.push(analysis);
+                localStorage.setItem("athletes", JSON.stringify(athletes));
+                loadAthletes();
+                alert("Análisis guardado para el deportista.");
+            }
+
+            // Mostrar resultado
             document.getElementById("analysisOutput").innerHTML = `
                 <h4>Análisis de la Combinación:</h4>
                 <p><strong>Representación/Simbolismo:</strong> ${symbolism}</p>
@@ -272,6 +507,60 @@
                 <p><strong>Cómo Sanarlo:</strong> ${healing}</p>
             `;
         });
+
+        // Load Analyses for Selected Athlete
+        function loadAnalyses() {
+            const athleteId = document.getElementById("viewAthlete").value;
+            const tableBody = document.getElementById("analysesTable").querySelector("tbody");
+            const table = document.getElementById("analysesTable");
+            table.classList.add("hidden");
+            tableBody.innerHTML = "";
+            if (athleteId) {
+                const athletes = getAthletes();
+                const athlete = athletes.find(a => a.id === athleteId);
+                if (athlete && athlete.analyses.length > 0) {
+                    athlete.analyses.forEach(analysis => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${analysis.objeto}</td>
+                            <td>${analysis.estado}</td>
+                            <td>${analysis.color}</td>
+                            <td>${analysis.textura}</td>
+                            <td>${analysis.tamaño}</td>
+                            <td>${analysis.symbolism.substring(0, 50)}...</td>
+                            <td>${analysis.trauma.substring(0, 50)}...</td>
+                            <td>${new Date(analysis.date).toLocaleDateString()}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                    table.classList.remove("hidden");
+                } else {
+                    alert("No hay análisis para este deportista.");
+                }
+            }
+        }
+
+        // Export Data to CSV
+        function exportData() {
+            const athletes = getAthletes();
+            let csv = "ID,Nombre,Apellidos,Telefono,Email,Deporte,Fecha Nacimiento,Hora Nacimiento,Objeto,Estado,Color,Textura,Tamaño,Simbolismo,Trauma,Fecha Análisis\n";
+            athletes.forEach(athlete => {
+                athlete.analyses.forEach(analysis => {
+                    csv += `"${athlete.id}","${athlete.nombre}","${athlete.apellidos}","${athlete.telefono}","${athlete.mail}","${athlete.deporte}","${athlete.fecha_nacimiento}","${athlete.hora_nacimiento}","${analysis.objeto}","${analysis.estado}","${analysis.color}","${analysis.textura}","${analysis.tamaño}","${analysis.symbolism}","${analysis.trauma}","${analysis.date}"\n`;
+                });
+                // Añadir deportistas sin análisis
+                if (athlete.analyses.length === 0) {
+                    csv += `"${athlete.id}","${athlete.nombre}","${athlete.apellidos}","${athlete.telefono}","${athlete.mail}","${athlete.deporte}","${athlete.fecha_nacimiento}","${athlete.hora_nacimiento}","","","","","","",""\n`;
+                }
+            });
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "mindsight_datos_completos.csv";
+            a.click();
+            alert("Datos exportados como CSV. Ábrelo en Excel para tablas dinámicas.");
+        }
     </script>
 
 </body>
