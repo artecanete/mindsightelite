@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -177,7 +178,7 @@
     </div>
 
     <script>
-        // Datos para análisis (completo de tu sistema)
+        // Datos para análisis (completo)
         const objects = {
             "espejo": "Ego/Auto-percepción",
             "puerta": "Transiciones/Cambio",
@@ -278,6 +279,19 @@
             "grande": ["Abrumador, presión, importancia exagerada", "¿Qué te abruma? Visualiza reducir."]
         };
 
+        const tips = [
+            "Agradecimiento al cuerpo: Dedica 2-3 min diarios a agradecer a tu corazón, pulmones, etc., diciendo: 'Gracias por sostenerme'. Visualiza gratitud para sanar.",
+            "Manifestación en presente: Repite 2 min al día afirmaciones como 'Soy paz'. Siente que ya es real para reprogramar creencias.",
+            "Respiración cuadrada: Inhala 4 seg, reten 4, exhala 4, reten 4. Repite 5-10 veces (3-5 min) visualizando disolver tensiones.",
+            "Visualización de luz sanadora: Visualiza 3-5 min luz dorada entrando por tu coronilla, disolviendo dolores emocionales como niebla al sol.",
+            "Afirmaciones con espejo: Mírate al espejo 1-2 min, di 'Soy amor, soy luz'. Siente las palabras resonar para sanar autoestima.",
+            "Respiración chamánica: Inhala 4 seg, reten 4, exhala 4, libera humo negro. Repite 10 veces (2-3 min) para limpiar energías estancadas.",
+            "Diario de gratitud: Escribe 5 min cada noche 3 gratitudes y una herida a liberar, visualizándola como flor que crece.",
+            "Visualización de guías: Dedica 3-5 min a imaginar un guía (animal, luz) que te ayuda a sanar. Pregunta: '¿Qué necesito liberar?'.",
+            "Manifestación con agua: Infunde un vaso de agua con 'Esta agua limpia mis heridas' (2 min). Bébelo visualizando purificación.",
+            "Círculo de luz: Visualiza 3-5 min un círculo de luz protectora, diciendo: 'Estoy sanado, estoy completo' para integrar sanación."
+        ];
+
         // Login simple
         const adminUser = "admin";
         const adminPass = "mindsight123";
@@ -319,7 +333,7 @@
         // Disparar cambio inicial
         document.getElementById("objeto").dispatchEvent(new Event("change"));
 
-        // Llenar selects para editar y análisis
+        // Llenar selects para editar, análisis y visualización
         function loadAthleteSelects() {
             const athletes = getAthletes();
             const editSelect = document.getElementById("editId");
@@ -327,7 +341,7 @@
             const viewSelect = document.getElementById("viewAthlete");
             editSelect.innerHTML = "<option value=''>-- Elegir --</option>";
             analysisSelect.innerHTML = "<option value=''>-- Elegir --</option>";
-            viewSelect.innerHTML = "<option value=''>-- Elegir --</option>";
+            viewSelect.innerHTML = "<option value=''>-- Elegir Deportista --</option>";
             athletes.forEach(athlete => {
                 const optionEdit = document.createElement("option");
                 optionEdit.value = athlete.id;
@@ -355,7 +369,7 @@
         document.getElementById("athleteForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const athlete = {
-                id: Date.now().toString(), // ID único basado en timestamp
+                id: Date.now().toString(),
                 nombre: document.getElementById("nombre").value,
                 apellidos: document.getElementById("apellidos").value,
                 telefono: document.getElementById("telefono").value,
@@ -363,7 +377,7 @@
                 deporte: document.getElementById("deporte").value,
                 fecha_nacimiento: document.getElementById("fecha_nacimiento").value,
                 hora_nacimiento: document.getElementById("hora_nacimiento").value,
-                analyses: [] // Sub-array para análisis
+                analyses: []
             };
             let athletes = getAthletes();
             athletes.push(athlete);
@@ -400,7 +414,7 @@
             }
         });
 
-        // Llenar formulario de edición cuando se selecciona ID
+        // Llenar formulario de edición
         document.getElementById("editId").addEventListener("change", function() {
             const id = this.value;
             if (id) {
@@ -418,7 +432,7 @@
             }
         });
 
-        // Load Athletes Table (con número de análisis)
+        // Load Athletes Table
         function loadAthletes() {
             const tableBody = document.getElementById("athletesTable").querySelector("tbody");
             tableBody.innerHTML = "";
@@ -474,11 +488,15 @@
 
             const questions = `Preguntas para explorar: ${stateGuide} ${colorGuide} ${textureGuide} ${sizeGuide}`;
 
-            const healing = `Cómo sanarlo: Libera con respiración cuadrada y gratitud al cuerpo. Re-visualiza el ${obj} en estado positivo (e.g., nuevo/intacto), color dorado (éxito), textura lisa/caliente (armonía/conexión), tamaño mediano (equilibrio), limpio, reluciente, con marco/orilla dorada reflejando victoria. Integra afirmaciones: 'Soy ${psique.toLowerCase()} equilibrado y poderoso'.`;
+            const healing = `Cómo sanarlo: Libera el trauma con respiración cuadrada (inhala 4 seg, reten 4, exhala 4, reten 4) y gratitud al cuerpo ('Gracias, corazón, por latir'). Re-visualiza el ${obj} en su forma perfecta: nuevo o intacto, color dorado (éxito), textura lisa y caliente (armonía y conexión), tamaño mediano (equilibrio), limpio, reluciente, con marco u orilla dorada reflejando victoria y confianza. Por ejemplo, si es un espejo, imagina su superficie cristalina, cálida, reflejando tu rostro lleno de paz; si es un río, visualiza aguas tranquilas, doradas, fluyendo suavemente. Integra afirmaciones: 'Soy ${psique.toLowerCase()} equilibrado y poderoso'.`;
 
-            // Guardar análisis vinculado al deportista
-            let athletes = getAthletes();
+            // Asignar tip según número de análisis
+            const athletes = getAthletes();
             const athleteIndex = athletes.findIndex(a => a.id === athleteId);
+            const tipIndex = athleteIndex !== -1 && athletes[athleteIndex].analyses ? athletes[athleteIndex].analyses.length % 10 : 0;
+            const tip = tips[tipIndex];
+
+            // Guardar análisis
             if (athleteIndex !== -1) {
                 const analysis = {
                     objeto: obj,
@@ -486,25 +504,28 @@
                     color: col,
                     textura: tex,
                     tamaño: siz,
-                    symbolism: symbolism,
+                    simbolismo: symbolism,
                     trauma: trauma,
-                    questions: questions,
-                    healing: healing,
-                    date: new Date().toISOString()
+                    preguntas: questions,
+                    sanacion: healing,
+                    tip: tip,
+                    fecha: new Date().toISOString()
                 };
                 athletes[athleteIndex].analyses.push(analysis);
                 localStorage.setItem("athletes", JSON.stringify(athletes));
                 loadAthletes();
+                loadAnalyses();
                 alert("Análisis guardado para el deportista.");
             }
 
             // Mostrar resultado
             document.getElementById("analysisOutput").innerHTML = `
-                <h4>Análisis de la Combinación:</h4>
+                <h4>Análisis Guardado para ${athletes[athleteIndex].nombre} ${athletes[athleteIndex].apellidos}:</h4>
                 <p><strong>Representación/Simbolismo:</strong> ${symbolism}</p>
                 <p><strong>Significado y Trauma:</strong> ${trauma}</p>
                 <p><strong>Preguntas para Explorar:</strong> ${questions}</p>
                 <p><strong>Cómo Sanarlo:</strong> ${healing}</p>
+                <p><strong>Tarea Diaria (Tip):</strong> ${tip}</p>
             `;
         });
 
@@ -527,9 +548,9 @@
                             <td>${analysis.color}</td>
                             <td>${analysis.textura}</td>
                             <td>${analysis.tamaño}</td>
-                            <td>${analysis.symbolism.substring(0, 50)}...</td>
+                            <td>${analysis.simbolismo.substring(0, 50)}...</td>
                             <td>${analysis.trauma.substring(0, 50)}...</td>
-                            <td>${new Date(analysis.date).toLocaleDateString()}</td>
+                            <td>${new Date(analysis.fecha).toLocaleDateString()}</td>
                         `;
                         tableBody.appendChild(row);
                     });
@@ -543,14 +564,14 @@
         // Export Data to CSV
         function exportData() {
             const athletes = getAthletes();
-            let csv = "ID,Nombre,Apellidos,Telefono,Email,Deporte,Fecha Nacimiento,Hora Nacimiento,Objeto,Estado,Color,Textura,Tamaño,Simbolismo,Trauma,Fecha Análisis\n";
+            let csv = "ID,Nombre,Apellidos,Telefono,Email,Deporte,Fecha Nacimiento,Hora Nacimiento,Objeto,Estado,Color,Textura,Tamaño,Simbolismo,Trauma,Preguntas,Sanacion,Tip,Fecha Análisis\n";
             athletes.forEach(athlete => {
-                athlete.analyses.forEach(analysis => {
-                    csv += `"${athlete.id}","${athlete.nombre}","${athlete.apellidos}","${athlete.telefono}","${athlete.mail}","${athlete.deporte}","${athlete.fecha_nacimiento}","${athlete.hora_nacimiento}","${analysis.objeto}","${analysis.estado}","${analysis.color}","${analysis.textura}","${analysis.tamaño}","${analysis.symbolism}","${analysis.trauma}","${analysis.date}"\n`;
-                });
-                // Añadir deportistas sin análisis
-                if (athlete.analyses.length === 0) {
-                    csv += `"${athlete.id}","${athlete.nombre}","${athlete.apellidos}","${athlete.telefono}","${athlete.mail}","${athlete.deporte}","${athlete.fecha_nacimiento}","${athlete.hora_nacimiento}","","","","","","",""\n`;
+                if (athlete.analyses && athlete.analyses.length > 0) {
+                    athlete.analyses.forEach(analysis => {
+                        csv += `"${athlete.id}","${athlete.nombre}","${athlete.apellidos}","${athlete.telefono}","${athlete.mail}","${athlete.deporte}","${athlete.fecha_nacimiento}","${athlete.hora_nacimiento}","${analysis.objeto}","${analysis.estado}","${analysis.color}","${analysis.textura}","${analysis.tamaño}","${analysis.simbolismo.replace(/"/g, '""')}","${analysis.trauma.replace(/"/g, '""')}","${analysis.preguntas.replace(/"/g, '""')}","${analysis.sanacion.replace(/"/g, '""')}","${analysis.tip.replace(/"/g, '""')}","${analysis.fecha}"\n`;
+                    });
+                } else {
+                    csv += `"${athlete.id}","${athlete.nombre}","${athlete.apellidos}","${athlete.telefono}","${athlete.mail}","${athlete.deporte}","${athlete.fecha_nacimiento}","${athlete.hora_nacimiento}","","","","","","","","","",""\n`;
                 }
             });
             const blob = new Blob([csv], { type: "text/csv" });
@@ -559,9 +580,10 @@
             a.href = url;
             a.download = "mindsight_datos_completos.csv";
             a.click();
-            alert("Datos exportados como CSV. Ábrelo en Excel para tablas dinámicas.");
+            alert("Datos exportados como CSV. Ábrelo en Excel para análisis.");
         }
     </script>
 
 </body>
 </html>
+```
