@@ -99,7 +99,7 @@
             <tbody></tbody>
         </table>
 
-        <!-- Formulario para Análisis de Objeto (vinculado a deportista) -->
+        <!-- Formulario para Análisis de Objeto -->
         <h3>Análisis de Objeto (Vinculado a Deportista)</h3>
         <form id="analysisForm">
             <label for="athleteIdForAnalysis">Seleccionar Deportista:</label>
@@ -121,7 +121,7 @@
             </select>
             <label for="estado">Estado:</label>
             <select id="estado" required>
-                <!-- Opciones se llenan dinámicamente -->
+                <!-- Opciones dinámicas -->
             </select>
             <label for="color">Color:</label>
             <select id="color" required>
@@ -172,13 +172,13 @@
             <tbody></tbody>
         </table>
 
-        <!-- Botones de Acción -->
+        <!-- Botones -->
         <button onclick="exportData()">Exportar Datos (CSV)</button>
         <button onclick="logout()">Cerrar Sesión</button>
     </div>
 
     <script>
-        // Datos para análisis (completo)
+        // Datos para análisis
         const objects = {
             "espejo": "Ego/Auto-percepción",
             "puerta": "Transiciones/Cambio",
@@ -292,7 +292,7 @@
             "Círculo de luz: Visualiza 3-5 min un círculo de luz protectora, diciendo: 'Estoy sanado, estoy completo' para integrar sanación."
         ];
 
-        // Login simple
+        // Login
         const adminUser = "admin";
         const adminPass = "mindsight123";
 
@@ -330,7 +330,6 @@
             }
         });
 
-        // Disparar cambio inicial
         document.getElementById("objeto").dispatchEvent(new Event("change"));
 
         // Llenar selects para editar, análisis y visualización
@@ -360,12 +359,12 @@
             });
         }
 
-        // Get Athletes from localStorage
+        // Obtener deportistas
         function getAthletes() {
             return JSON.parse(localStorage.getItem("athletes")) || [];
         }
 
-        // Athlete Form - Save to localStorage with ID
+        // Guardar deportista
         document.getElementById("athleteForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const athlete = {
@@ -388,7 +387,7 @@
             alert("Deportista guardado.");
         });
 
-        // Edit Athlete Form
+        // Editar deportista
         document.getElementById("editAthleteForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const id = document.getElementById("editId").value;
@@ -414,7 +413,6 @@
             }
         });
 
-        // Llenar formulario de edición
         document.getElementById("editId").addEventListener("change", function() {
             const id = this.value;
             if (id) {
@@ -432,7 +430,7 @@
             }
         });
 
-        // Load Athletes Table
+        // Cargar tabla deportistas
         function loadAthletes() {
             const tableBody = document.getElementById("athletesTable").querySelector("tbody");
             tableBody.innerHTML = "";
@@ -453,7 +451,7 @@
             });
         }
 
-        // Analysis Form - Vinculado a deportista
+        // Análisis de objeto
         document.getElementById("analysisForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const athleteId = document.getElementById("athleteIdForAnalysis").value;
@@ -467,7 +465,6 @@
             const tex = document.getElementById("textura").value;
             const siz = document.getElementById("tamaño").value;
 
-            // Generar análisis
             const psique = objects[obj] || "No encontrado";
             const stateData = states[obj] ? states[obj][st] : null;
             const stateInterp = stateData ? stateData[0] : "No encontrado";
@@ -488,7 +485,7 @@
 
             const questions = `Preguntas para explorar: ${stateGuide} ${colorGuide} ${textureGuide} ${sizeGuide}`;
 
-            const healing = `Cómo sanarlo: Libera el trauma con respiración cuadrada (inhala 4 seg, reten 4, exhala 4, reten 4) y gratitud al cuerpo ('Gracias, corazón, por latir'). Re-visualiza el ${obj} en su forma perfecta: nuevo o intacto, color dorado (éxito), textura lisa y caliente (armonía y conexión), tamaño mediano (equilibrio), limpio, reluciente, con marco u orilla dorada reflejando victoria y confianza. Por ejemplo, si es un espejo, imagina su superficie cristalina, cálida, reflejando tu rostro lleno de paz; si es un río, visualiza aguas tranquilas, doradas, fluyendo suavemente. Integra afirmaciones: 'Soy ${psique.toLowerCase()} equilibrado y poderoso'.`;
+            const healing = `Cómo sanarlo: Libera el trauma con respiración cuadrada (inhala 4 seg, reten 4, exhala 4, reten 4) y gratitud al cuerpo ('Gracias, corazón, por latir'). Re-visualiza el ${obj} en su forma perfecta: ${obj === 'espejo' ? 'nuevo, limpio, reluciente, con marco dorado reflejando un rostro lleno de paz' : obj === 'puerta' ? 'abierta, dorada, lisa, cálida, invitando a nuevas oportunidades' : obj === 'reloj' ? 'funcionando, dorado, liso, cálido, marcando tiempo en armonía' : obj === 'libro' ? 'nuevo, dorado, liso, cálido, con páginas llenas de posibilidades' : obj === 'rio' ? 'tranquilo, dorado, liso, cálido, fluyendo suavemente' : obj === 'vela' ? 'encendida, dorada, lisa, cálida, con llama brillante' : obj === 'puente' ? 'sólido, dorado, liso, cálido, conectando relaciones fuertes' : obj === 'llave' ? 'nueva, dorada, lisa, cálida, desbloqueando oportunidades' : obj === 'coche' ? 'nuevo, dorado, liso, cálido, avanzando con confianza' : 'sólida, dorada, lisa, cálida, acogiendo paz familiar'}, tamaño mediano (equilibrio). Integra afirmaciones: 'Soy ${psique.toLowerCase()} equilibrado y poderoso'.`;
 
             // Asignar tip según número de análisis
             const athletes = getAthletes();
@@ -529,7 +526,7 @@
             `;
         });
 
-        // Load Analyses for Selected Athlete
+        // Cargar análisis por deportista
         function loadAnalyses() {
             const athleteId = document.getElementById("viewAthlete").value;
             const tableBody = document.getElementById("analysesTable").querySelector("tbody");
@@ -561,7 +558,7 @@
             }
         }
 
-        // Export Data to CSV
+        // Exportar datos a CSV
         function exportData() {
             const athletes = getAthletes();
             let csv = "ID,Nombre,Apellidos,Telefono,Email,Deporte,Fecha Nacimiento,Hora Nacimiento,Objeto,Estado,Color,Textura,Tamaño,Simbolismo,Trauma,Preguntas,Sanacion,Tip,Fecha Análisis\n";
