@@ -162,106 +162,95 @@
 }
 
     </style>
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
-  import { getFirestore, collection, addDoc, getDocs, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js';
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyBs2wAxPuJNfhts6wDVpOJo0eIywpJLWL8",
+        authDomain: "mse360local.firebaseapp.com",
+        projectId: "mse360local",
+        storageBucket: "mse360local.firebasestorage.app",
+        messagingSenderId: "379662215434",
+        appId: "1:379662215434:web:ac65ff92c1b416420db2f3",
+        measurementId: "G-93787Q95M9"
+      };
 
-  // Tu configuración de Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyBs2wAxPuJNfhts6wDVpOJo0eIywpJLWL8",
-    authDomain: "mse360local.firebaseapp.com",
-    projectId: "mse360local",
-    storageBucket: "mse360local.firebasestorage.app",
-    messagingSenderId: "379662215434",
-    appId: "1:379662215434:web:ac65ff92c1b416420db2f3",
-    measurementId: "G-93787Q95M9"
-  };
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
 
-  // Inicializar Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+      window.pacientesDB = [];  // Array para pacientes
+      window.sesionesDB = {};   // Objeto para sesiones por paciente
 
-  // Variables globales para datos
-  window.pacientesDB = [];  // Array para pacientes
-  window.sesionesDB = {};   // Objeto para sesiones por paciente
-
-  // Guardar paciente en Firebase
-  window.guardarPacienteFirebase = async function(pacienteData) {
-    try {
-      const docRef = await addDoc(collection(db, 'pacientes'), pacienteData);
-      console.log('Paciente guardado en Firebase con ID:', docRef.id);
-      cargarPacientesFirebase(); // Actualiza lista
-    } catch (error) {
-      console.error('Error al guardar paciente:', error);
-    }
-  };
-
-  // Cargar pacientes desde Firebase
-  window.cargarPacientesFirebase = async function() {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'pacientes'));
-      window.pacientesDB = [];
-      querySnapshot.forEach((doc) => {
-        window.pacientesDB.push({ id: doc.id, ...doc.data() });
-      });
-      actualizarListaPacientes(); // Llama a tu función existente para mostrar la lista
-    } catch (error) {
-      console.error('Error al cargar pacientes:', error);
-    }
-  };
-
-  // Guardar sesión en Firebase
-  window.guardarSesionFirebase = async function(sesionData, pacienteId) {
-    try {
-      const docRef = await addDoc(collection(db, `pacientes/${pacienteId}/sesiones`), sesionData);
-      console.log('Sesión guardada con ID:', docRef.id);
-      cargarSesionesFirebase(pacienteId); // Actualiza historial
-    } catch (error) {
-      console.error('Error al guardar sesión:', error);
-    }
-  };
-
-  // Cargar sesiones de un paciente
-  window.cargarSesionesFirebase = async function(pacienteId) {
-    try {
-      const querySnapshot = await getDocs(collection(db, `pacientes/${pacienteId}/sesiones`));
-      window.sesionesDB[pacienteId] = [];
-      querySnapshot.forEach((doc) => {
-        window.sesionesDB[pacienteId].push({ id: doc.id, ...doc.data() });
-      });
-      actualizarHistorialSesiones(); // Llama a tu función existente para mostrar historial
-    } catch (error) {
-      console.error('Error al cargar sesiones:', error);
-    }
-  };
-
-  // Sincronización en tiempo real (opcional)
-  window.iniciarSyncPacientes = function() {
-    onSnapshot(collection(db, 'pacientes'), (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added' || change.type === 'modified') {
+      window.guardarPacienteFirebase = async function(pacienteData) {
+        try {
+          const docRef = await db.collection('pacientes').add(pacienteData);
+          console.log('Paciente guardado en Firebase con ID:', docRef.id);
           cargarPacientesFirebase();
+        } catch (error) {
+          console.error('Error al guardar paciente:', error);
         }
-      });
-    });
-  };
+      };
 
-  window.iniciarSyncSesiones = function(pacienteId) {
-    onSnapshot(collection(db, `pacientes/${pacienteId}/sesiones`), (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added' || change.type === 'modified') {
+      window.cargarPacientesFirebase = async function() {
+        try {
+          const querySnapshot = await db.collection('pacientes').get();
+          window.pacientesDB = [];
+          querySnapshot.forEach((doc) => {
+            window.pacientesDB.push({ id: doc.id, ...doc.data() });
+          });
+          actualizarListaPacientes();
+        } catch (error) {
+          console.error('Error al cargar pacientes:', error);
+        }
+      };
+
+      window.guardarSesionFirebase = async function(sesionData, pacienteId) {
+        try {
+          const docRef = await db.collection(`pacientes/${pacienteId}/sesiones`).add(sesionData);
+          console.log('Sesión guardada con ID:', docRef.id);
           cargarSesionesFirebase(pacienteId);
+        } catch (error) {
+          console.error('Error al guardar sesión:', error);
         }
-      });
-    });
-  };
+      };
 
-  // Cargar datos al iniciar
-  window.addEventListener('load', () => {
-    cargarPacientesFirebase();
-    // Opcional: iniciarSyncPacientes();
-  });
-</script>
+      window.cargarSesionesFirebase = async function(pacienteId) {
+        try {
+          const querySnapshot = await db.collection(`pacientes/${pacienteId}/sesiones`).get();
+          window.sesionesDB[pacienteId] = [];
+          querySnapshot.forEach((doc) => {
+            window.sesionesDB[pacienteId].push({ id: doc.id, ...doc.data() });
+          });
+          actualizarHistorialSesiones();
+        } catch (error) {
+          console.error('Error al cargar sesiones:', error);
+        }
+      };
+
+      window.iniciarSyncPacientes = function() {
+        db.collection('pacientes').onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === 'added' || change.type === 'modified') {
+              cargarPacientesFirebase();
+            }
+          });
+        });
+      };
+
+      window.iniciarSyncSesiones = function(pacienteId) {
+        db.collection(`pacientes/${pacienteId}/sesiones`).onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === 'added' || change.type === 'modified') {
+              cargarSesionesFirebase(pacienteId);
+            }
+          });
+        });
+      };
+
+      window.addEventListener('load', () => {
+        cargarPacientesFirebase();
+      });
+    </script>
 </head>
 <body>
     <div class="container">
