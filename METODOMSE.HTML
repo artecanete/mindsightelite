@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodo MindSight Elite</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+       body {
+    background: radial-gradient(circle at top left, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: #f5f7fa;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem;
+}
+
+/* ===== Tarjetas estilo futurista ===== */
+.card {
+    background: rgba(25, 25, 45, 0.9);
+    border-radius: 1.25rem;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.1);
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 0 40px rgba(0, 200, 255, 0.4);
+}
+
+/* ===== Botones con efecto neón ===== */
+.btn {
+    padding: 0.875rem 2rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+    transition: transform 0.2s ease;
+}
+.btn::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+}
+.btn:hover::before {
+    left: 100%;
+}
+.btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+.btn-success {
+    background: linear-gradient(135deg, #00b09b, #96c93d);
+}
+.btn-danger {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+}
+.btn-secondary {
+    background: linear-gradient(135deg, #434343, #1a1a1a);
+}
+.btn-export {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+/* ===== Inputs y Selects elegantes ===== */
+.input, .select, textarea {
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    border-radius: 0.5rem;
+    padding: 0.875rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: #f5f7fa;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+.input:focus, .select:focus, textarea:focus {
+    outline: none;
+    border-color: #00eaff;
+    box-shadow: 0 0 12px #00eaff;
+    background: rgba(0, 0, 0, 0.6);
+}
+.select option {
+    background: #1a1a2e;
+    color: #f5f7fa;
+}
+
+/* ===== Listas ===== */
+.list-item {
+    background: rgba(0, 255, 255, 0.07);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.15);
+    border-left: 5px solid #00eaff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+.list-item:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.35);
+}
+
+/* ===== Sesiones ===== */
+.session-item {
+    background: rgba(142, 45, 226, 0.2);
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    border-left: 5px solid #8e2de2;
+    box-shadow: 0 0 15px rgba(142, 45, 226, 0.3);
+}
+
+/* ===== Toast ===== */
+.toast {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background: #00eaff;
+    color: #0f0c29;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.toast.show {
+    opacity: 1;
+}
+.toast.error {
+    background: #ff4b2b;
+    color: white;
+}
+
+    </style>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
+  import { getFirestore, collection, addDoc, getDocs, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js';
+
+  // Tu configuración de Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBs2wAxPuJNfhts6wDVpOJo0eIywpJLWL8",
+    authDomain: "mse360local.firebaseapp.com",
+    projectId: "mse360local",
+    storageBucket: "mse360local.firebasestorage.app",
+    messagingSenderId: "379662215434",
+    appId: "1:379662215434:web:ac65ff92c1b416420db2f3",
+    measurementId: "G-93787Q95M9"
+  };
+
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Variables globales para datos
+  window.pacientesDB = [];  // Array para pacientes
+  window.sesionesDB = {};   // Objeto para sesiones por paciente
+
+  // Guardar paciente en Firebase
+  window.guardarPacienteFirebase = async function(pacienteData) {
+    try {
+      const docRef = await addDoc(collection(db, 'pacientes'), pacienteData);
+      console.log('Paciente guardado en Firebase con ID:', docRef.id);
+      cargarPacientesFirebase(); // Actualiza lista
+    } catch (error) {
+      console.error('Error al guardar paciente:', error);
+    }
+  };
+
+  // Cargar pacientes desde Firebase
+  window.cargarPacientesFirebase = async function() {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'pacientes'));
+      window.pacientesDB = [];
+      querySnapshot.forEach((doc) => {
+        window.pacientesDB.push({ id: doc.id, ...doc.data() });
+      });
+      actualizarListaPacientes(); // Llama a tu función existente para mostrar la lista
+    } catch (error) {
+      console.error('Error al cargar pacientes:', error);
+    }
+  };
+
+  // Guardar sesión en Firebase
+  window.guardarSesionFirebase = async function(sesionData, pacienteId) {
+    try {
+      const docRef = await addDoc(collection(db, `pacientes/${pacienteId}/sesiones`), sesionData);
+      console.log('Sesión guardada con ID:', docRef.id);
+      cargarSesionesFirebase(pacienteId); // Actualiza historial
+    } catch (error) {
+      console.error('Error al guardar sesión:', error);
+    }
+  };
+
+  // Cargar sesiones de un paciente
+  window.cargarSesionesFirebase = async function(pacienteId) {
+    try {
+      const querySnapshot = await getDocs(collection(db, `pacientes/${pacienteId}/sesiones`));
+      window.sesionesDB[pacienteId] = [];
+      querySnapshot.forEach((doc) => {
+        window.sesionesDB[pacienteId].push({ id: doc.id, ...doc.data() });
+      });
+      actualizarHistorialSesiones(); // Llama a tu función existente para mostrar historial
+    } catch (error) {
+      console.error('Error al cargar sesiones:', error);
+    }
+  };
+
+  // Sincronización en tiempo real (opcional)
+  window.iniciarSyncPacientes = function() {
+    onSnapshot(collection(db, 'pacientes'), (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added' || change.type === 'modified') {
+          cargarPacientesFirebase();
+        }
+      });
+    });
+  };
+
+  window.iniciarSyncSesiones = function(pacienteId) {
+    onSnapshot(collection(db, `pacientes/${pacienteId}/sesiones`), (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added' || change.type === 'modified') {
+          cargarSesionesFirebase(pacienteId);
+        }
+      });
+    });
+  };
+
+  // Cargar datos al iniciar
+  window.addEventListener('load', () => {
+    cargarPacientesFirebase();
+    // Opcional: iniciarSyncPacientes();
+  });
+</script>
+</head>
+<body>
+    <div class="container">
+      <header class="text-center mb-12">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 1rem;">
+        <img src="https://i.imgur.com/aNReoxl.png" alt="Logo" style="height: 90px; width: auto;">
+        <h1 class="text-5xl font-bold">MindSight Elite 360</h1>
+    </div>
+    <p class="text-xl font-medium" style="color: #7dd3fc;">
+        Entrenamiento Mental Revolucionario para Deportistas
+    </p>
+</header>
+
+
+
+        <section id="new-patient" class="card fade-in">
+            <h2 class="text-3xl font-semibold text-indigo-800 mb-6">Nuevo Paciente</h2>
+            <form id="patientForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="hidden" id="patientId">
+                <div>
+                    <label for="name" class="block text-indigo-600 font-medium mb-2">Nombre:</label>
+                    <input type="text" id="name" required class="input">
+                </div>
+                <div>
+                    <label for="lastName" class="block text-indigo-600 font-medium mb-2">Apellidos:</label>
+                    <input type="text" id="lastName" required class="input">
+                </div>
+                <div>
+                    <label for="birthDate" class="block text-indigo-600 font-medium mb-2">Fecha de Nacimiento:</label>
+                    <input type="date" id="birthDate" required class="input">
+                </div>
+                <div>
+                    <label for="birthTime" class="block text-indigo-600 font-medium mb-2">Hora de Nacimiento:</label>
+                    <input type="time" id="birthTime" required class="input">
+                </div>
+                <div>
+                    <label for="phone" class="block text-indigo-600 font-medium mb-2">Teléfono:</label>
+                    <input type="tel" id="phone" required class="input">
+                </div>
+                <div>
+                    <label for="email" class="block text-indigo-600 font-medium mb-2">Email:</label>
+                    <input type="email" id="email" required class="input">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="sport" class="block text-indigo-600 font-medium mb-2">Deporte que practica:</label>
+                    <select id="sport" required class="select">
+                        <option value="">Seleccione...</option>
+                        <option value="Fútbol">Fútbol</option>
+                        <option value="Tenis">Tenis</option>
+                        <option value="Atletismo">Atletismo</option>
+                        <option value="Natación">Natación</option>
+                        <option value="Baloncesto">Baloncesto</option>
+                        <option value="Ciclismo">Ciclismo</option>
+                        <option value="Gimnasia">Gimnasia</option>
+                        <option value="Boxeo">Boxeo</option>
+                        <option value="Artes Marciales">Artes Marciales</option>
+                        <option value="Voleibol">Voleibol</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2 flex justify-end gap-4">
+                    <button type="button" onclick="savePatient()" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Guardar Paciente</button>
+                    <button type="button" onclick="clearPatientForm()" class="btn btn-secondary"><i class="fas fa-times mr-2"></i>Cancelar</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-semibold text-indigo-800">Lista de Pacientes</h2>
+                <button onclick="exportToExcel()" class="btn btn-export"><i class="fas fa-file-export mr-2"></i>Exportar a Excel</button>
+            </div>
+            <div class="mb-6">
+                <input type="text" id="searchPatients" placeholder="Buscar pacientes por nombre, apellidos o deporte..." class="input" onkeyup="searchPatients()">
+            </div>
+            <ul id="patientList" class="space-y-4"></ul>
+        </section>
+
+        <section id="sessionHistory" class="card fade-in" style="display: none;">
+            <h2 class="text-3xl font-semibold text-indigo-800 mb-6">Historial de Sesiones para <span id="historyPatientName"></span></h2>
+            <ul id="historySessionList" class="space-y-4"></ul>
+            <div class="flex justify-between mt-6">
+                <button onclick="startNewSession()" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Iniciar Nueva Sesión</button>
+                <button onclick="backToPatientList()" class="btn btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Volver a Lista</button>
+            </div>
+        </section>
+
+        <section id="newSession" class="card fade-in" style="display: none;">
+            <h2 class="text-3xl font-semibold text-indigo-800 mb-6">Sesión para <span id="sessionPatientName"></span></h2>
+            <form id="sessionForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="object" class="block text-indigo-600 font-medium mb-2">Seleccionar Objeto:</label>
+                    <select id="object" onchange="updateStates()" required class="select" disabled>
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="state" class="block text-indigo-600 font-medium mb-2">Estado Principal:</label>
+                    <select id="state" onchange="updateSubstates()" required class="select">
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="substate" class="block text-indigo-600 font-medium mb-2">Sub-estado:</label>
+                    <select id="substate" required class="select">
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="color" class="block text-indigo-600 font-medium mb-2">Color:</label>
+                    <select id="color" required class="select">
+                        <option value="">Seleccione...</option>
+                        <option value="Dorado">Dorado</option>
+                        <option value="Negro">Negro</option>
+                        <option value="Blanco">Blanco</option>
+                        <option value="Rojo">Rojo</option>
+                        <option value="Azul">Azul</option>
+                        <option value="Rosa">Rosa</option>
+                        <option value="Violeta">Violeta</option>
+                        <option value="Plata">Plata</option>
+                        <option value="Marrón">Marrón</option>
+                        <option value="Verde">Verde</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="texture" class="block text-indigo-600 font-medium mb-2">Textura:</label>
+                    <select id="texture" required class="select">
+                        <option value="">Seleccione...</option>
+                        <option value="Lisa">Lisa</option>
+                        <option value="Áspera">Áspera</option>
+                        <option value="Pegajosa">Pegajosa</option>
+                        <option value="Fría">Fría</option>
+                        <option value="Caliente">Caliente</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="size" class="block text-indigo-600 font-medium mb-2">Tamaño:</label>
+                    <select id="size" required class="select">
+                        <option value="">Seleccione...</option>
+                        <option value="Pequeño">Pequeño</option>
+                        <option value="Mediano">Mediano</option>
+                        <option value="Grande">Grande</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2 flex justify-end gap-4">
+                    <button type="button" onclick="generateAnalysis()" class="btn btn-primary"><i class="fas fa-brain mr-2"></i>Generar Análisis Completo</button>
+                    <button type="button" onclick="saveSession()" class="btn btn-success"><i class="fas fa-save mr-2"></i>Guardar Sesión</button>
+                    <button type="button" onclick="backToHistory()" class="btn btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Volver a Historial</button>
+                </div>
+            </form>
+            <div id="analysisResult" class="mt-8 p-6 bg-indigo-50 rounded-lg" style="display: none;">
+                <h3 class="text-2xl font-semibold text-indigo-800 mb-4">Análisis Simbólico</h3>
+                <p id="analysisText" class="text-gray-700"></p>
+                <h4 class="text-xl font-medium text-indigo-600 mt-6 mb-2">Preguntas para Profundizar</h4>
+                <ul id="questionsList" class="list-disc pl-5 text-gray-700"></ul>
+                <h4 class="text-xl font-medium text-indigo-600 mt-6 mb-2">Visualización Reparada</h4>
+                <p id="repairedVisualization" class="text-gray-700"></p>
+                <div class="mt-6">
+                    <h4 class="text-xl font-medium text-indigo-600 mb-2">Mensaje para Copiar:</h4>
+                    <textarea id="messageText" class="input h-28" readonly></textarea>
+                    <p class="text-sm text-gray-600 mt-2">El mensaje ha sido copiado al portapapeles. Abre el chat externo y pégalo manualmente para obtener el análisis profundo.</p>
+                </div>
+                <div class="mt-6">
+                    <h4 class="text-xl font-medium text-indigo-600 mb-2">Pegar Análisis Externo:</h4>
+                    <textarea id="externalAnalysis" class="input h-40" placeholder="Pega aquí el resultado del chat externo"></textarea>
+                    <button type="button" onclick="saveExternalAnalysis()" class="btn btn-success mt-2"><i class="fas fa-save mr-2"></i>Guardar Análisis Externo en Sesión</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="toast" class="toast">Mensaje copiado al portapapeles</div>
+
+    <script>
+        // NOTA: Este código debe ejecutarse en un contexto seguro (HTTPS o localhost) para que la API del clipboard funcione correctamente.
+        // Para pruebas locales, usa un servidor como `http-server` (`npm install -g http-server` y `http-server .`) o el Live Server de VS Code.
+        
+        // Orden de objetos para las 10 sesiones
+        const sessionOrder = ['Espejo', 'Libro', 'Río', 'Llave', 'Puente', 'Casa', 'Reloj', 'Vela', 'Coche', 'Combinación'];
+
+        // Datos de objetos, estados y subestados
+        const data = {
+            objects: {
+                'Espejo': {
+                    states: {
+                        'Nuevo': ['Claro', 'Embañado', 'Reflectante'],
+                        'Roto': ['Fragmentado', 'Astillado', 'Derrumbado'],
+                        'Sucio': ['Manchado', 'Ennegrecido', 'Empolvado'],
+                        'Antiguo': ['Desgastado', 'Ornamentado', 'Craquelado'],
+                        'Empañado': ['Ligero', 'Denso', 'Cambiante'],
+                        'Distorsionado': ['Ondulado', 'Alargado', 'Achicado']
+                    }
+                },
+                'Puerta': {
+                    states: {
+                        'Abierta': ['Invitante', 'Entreabierta', 'Amplia'],
+                        'Cerrada': ['Bloqueada', 'Sellada', 'Cerrada con llave'],
+                        'Rota': ['Agrietada', 'Destrozada', 'Colapsada'],
+                        'Sólida': ['Abierta', 'Cerrada', 'Entreabierta'],
+                        'Atascada': ['Pegada', 'Rígida', 'Bloqueada por escombros'],
+                        'Ornamentada': ['Brillante', 'Pesada', 'Desgastada']
+                    }
+                },
+                'Reloj': {
+                    states: {
+                        'Funcionando': ['Rítmico', 'Rápido', 'Lento'],
+                        'Parado': ['Congelado', 'Silencioso', 'Estático'],
+                        'Roto': ['Funcionando', 'Parado', 'Desarmado'],
+                        'Antiguo': ['Valioso', 'Desgastado', 'Roto'],
+                        'Acelerado': ['Frenético', 'Irregular', 'Descontrolado'],
+                        'Sin Manecillas': ['Incierto', 'Estancado', 'Caótico']
+                    }
+                },
+                'Libro': {
+                    states: {
+                        'Nuevo': ['Intacto', 'Abierto', 'Cerrado'],
+                        'Desgastado': ['Deshojado', 'Amarillento', 'Rasgado'],
+                        'Páginas en Blanco': ['Potenciales', 'Vacías', 'Intactas'],
+                        'Roto': ['Despedazado', 'Quemado', 'Desarmado'],
+                        'Quemado': ['Carbonizado', 'Humoso', 'Apagado'],
+                        'Sobrescrito': ['Reescrito', 'Caótico', 'Denso']
+                    }
+                },
+                'Río': {
+                    states: {
+                        'Tranquilo': ['Claro', 'Suave', 'Estancado'],
+                        'Turbulento': ['Espumoso', 'Rápido', 'Incontrolable'],
+                        'Seco': ['Agrietado', 'Polvoriento', 'Árido'],
+                        'Desbordado': ['Inundado', 'Turbio', 'Destructivo'],
+                        'Contaminado': ['Tóxico', 'Oleoso', 'Envenenado'],
+                        'Congelado': ['Rígido', 'Frágil', 'Derretido']
+                    }
+                },
+                'Vela': {
+                    states: {
+                        'Encendida': ['Brillante', 'Parpadeante', 'Fuerte'],
+                        'Apagada': ['Fría', 'Humosa', 'Intacta'],
+                        'Derritiéndose': ['Goteante', 'Consumida', 'Derretida'],
+                        'Intacta': ['Nueva', 'Polvorienta', 'Preparada'],
+                        'Humosa': ['Densa', 'Ligera', 'Sofocante'],
+                        'Doble Llama': ['Confusa', 'Armónica', 'Inestable']
+                    }
+                },
+                'Puente': {
+                    states: {
+                        'Sólido': ['Ancho', 'Estrecho', 'Estable'],
+                        'Inestable': ['Tambaleante', 'Agrietado', 'Colapsante'],
+                        'En Construcción': ['Progresando', 'Paralizado', 'Incompleto'],
+                        'Antiguo': ['Valioso', 'Deteriorado', 'Decorativo'],
+                        'Colgante': ['Frágil', 'Oscilante', 'Roto'],
+                        'Derrumbado': ['Ruinas', 'Bloqueado', 'Reconstruible']
+                    }
+                },
+                'Llave': {
+                    states: {
+                        'Nueva': ['Brillante', 'Simple', 'Compleja'],
+                        'Oxidada': ['Corroída', 'Frágil', 'Pegajosa'],
+                        'Rota': ['Partida', 'Doblada', 'Astillada'],
+                        'Antigua': ['Valiosa', 'Desgastada', 'Ornamentada'],
+                        'Doblada': ['Retorcida', 'Inservible', 'Reparable'],
+                        'Perdida': ['Oculta', 'Buscada', 'Olvidada']
+                    }
+                },
+                'Coche': {
+                    states: {
+                        'Nuevo': ['Rápido', 'Cómodo', 'Brillante'],
+                        'Averiado': ['Parado', 'Ruidoso', 'Reparable'],
+                        'Viejo': ['Desgastado', 'Valioso', 'Lento'],
+                        'Sin Combustible': ['Estancado', 'Vacío', 'Llenable'],
+                        'Sobrecargado': ['Lento', 'Inestable', 'Aliviable'],
+                        'Chocado': ['Destrozado', 'Reparable', 'Marcado']
+                    }
+                },
+                'Casa': {
+                    states: {
+                        'Sólida': ['Acogedora', 'Cerrada', 'Abierta'],
+                        'En Ruinas': ['Derrumbada', 'Habitable', 'Abandonada'],
+                        'En Construcción': ['Progresando', 'Estancada', 'Inestable'],
+                        'Vacía': ['Silenciosa', 'Fría', 'Preparada'],
+                        'Embrujada': ['Sombría', 'Activa', 'Limpia'],
+                        'Expandida': ['Amplia', 'Desorganizada', 'Armónica']
+                    }
+                }
+            },
+            colors: ['Dorado', 'Negro', 'Blanco', 'Rojo', 'Azul', 'Rosa', 'Violeta', 'Plata', 'Marrón', 'Verde'],
+            textures: ['Lisa', 'Áspera', 'Pegajosa', 'Fría', 'Caliente'],
+            sizes: ['Pequeño', 'Mediano', 'Grande'],
+            sports: ['Fútbol', 'Tenis', 'Atletismo', 'Natación', 'Baloncesto', 'Ciclismo', 'Gimnasia', 'Boxeo', 'Artes Marciales', 'Voleibol']
+        };
+
+        // Datos de simbolismos para análisis
+        const simbolismos = {
+            colors: {
+                'Dorado': { text: 'Iluminación, éxito, valor personal, divinidad o potencial realizado. En el deporte: la búsqueda de la gloria y el máximo rendimiento.', type: 'positive' },
+                'Negro': { text: 'Oscuridad, miedo, desconocido, depresión o pérdida. En el deporte: un fracaso que pesa, una etapa de incertidumbre o una herida emocional oculta.', type: 'negative' },
+                'Blanco': { text: 'Pureza, inocencia, renovación o claridad. En el deporte: el deseo de un "borrón y cuenta nueva", un nuevo comienzo o la transparencia en las intenciones.', type: 'positive' },
+                'Rojo': { text: 'Pasión, ira, energía vital o peligro. En el deporte: la rabia competitiva, la energía que impulsa o la señal de alerta ante una posible lesión o burnout.', type: 'neutral' },
+                'Azul': { text: 'Calma, introspección, tristeza o confianza. En el deporte: la habilidad de mantener la serenidad bajo presión o el sentimiento de melancolía por un objetivo no alcanzado.', type: 'neutral' },
+                'Rosa': { text: 'Amor, suavidad, vulnerabilidad o sanación emocional. En el deporte: el cuidado hacia uno mismo, la autoaceptación y la empatía con el proceso.', type: 'positive' },
+                'Violeta': { text: 'Espiritualidad, transformación, misterio o intuición. En el deporte: un cambio profundo, una transición de nivel o la conexión con la voz interior que guía el juego.', type: 'positive' },
+                'Plata': { text: 'Reflexión, modernidad, frialdad metálica o adaptabilidad. En el deporte: la autoimagen "fría" e impenetrable o la capacidad de fluir con las presiones mediáticas y del entorno.', type: 'neutral' },
+                'Marrón': { text: 'Estabilidad, tierra, realismo o estancamiento. En el deporte: la sensación de "estar estancado" en un nivel, la solidez en la técnica o los cimientos problemáticos en la formación deportiva.', type: 'neutral' },
+                'Verde': { text: 'Crecimiento, renovación, envidia o naturaleza. En el deporte: el crecimiento personal, la regeneración física o la envidia que surge al ver el éxito de otros.', type: 'neutral' }
+            },
+            textures: {
+                'Lisa': { text: 'Armonía, fluidez, paz o facilidad en el proceso. En el deporte: un rendimiento que fluye sin esfuerzo, un camino despejado.', type: 'positive' },
+                'Áspera': { text: 'Conflictos, rugosidad emocional, dificultades. En el deporte: experiencias "ásperas" como críticas, rivalidades o un camino lleno de obstáculos.', type: 'negative' },
+                'Pegajosa': { text: 'Adherencia, dependencias, algo que "se pega" y no se suelta. En el deporte: recuerdos persistentes de un error, la presión de expectativas que no se disuelve o una "mala racha".', type: 'negative' },
+                'Fría': { text: 'Distancia, aislamiento, frialdad emocional o rechazo. En el deporte: la sensación de soledad en el equipo o el "congelamiento" mental en momentos clave de la competición.', type: 'negative' },
+                'Caliente': { text: 'Pasión intensa, ira, calidez o urgencia. En el deporte: la energía que arde en el interior, la pasión por el juego o el sentimiento de "burnout" o saturación.', type: 'neutral' }
+            },
+            sizes: {
+                'Pequeño': { text: 'Sentirse diminuto, insignificante o minimizado. En el deporte: una baja autoestima que te hace sentir que no vales o que tu esfuerzo no es suficiente.', type: 'negative' },
+                'Mediano': { text: 'Equilibrio, normalidad, algo manejable y realista. En el deporte: un estado de homeostasis, de aceptación y de control sobre las situaciones.', type: 'positive' },
+                'Grande': { text: 'Abrumador, dominante, expansivo o intimidante. En el deporte: un desafío que te sobrepasa, la presión pública o un fracaso que sientes que ocupa todo tu ser.', type: 'negative' }
+            },
+            objects: {
+                'Espejo': {
+                    principal: 'Ego/Auto-percepción',
+                    type: { 'Nuevo': 'positive', 'Roto': 'negative', 'Sucio': 'negative', 'Antiguo': 'negative', 'Empañado': 'negative', 'Distorsionado': 'negative' },
+                    states: {
+                        'Nuevo': 'Una nueva autoimagen, un renacimiento.',
+                        'Roto': 'El ego fragmentado, una identidad dañada por fracasos o críticas.',
+                        'Sucio': 'La autopercepción distorsionada, una sensación de culpa o vergüenza acumulada.',
+                        'Antiguo': 'Una autoestima estancada, aferrada a un pasado glorioso que ya no existe.',
+                        'Empañado': 'La visión borrosa del yo, una confusión emocional que impide verse con claridad.',
+                        'Distorsionado': 'Una percepción alterada de uno mismo, como en la dismorfia corporal o las presiones externas del deporte.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué nueva imagen de ti mismo estás dispuesto a abrazar?', '¿Cómo puedes potenciar esta claridad y llevarla a tu rendimiento?', '¿Qué reflejo ideal quieres ver en el futuro?'],
+                        'negative': ['¿Qué parte de ti se siente rota o fragmentada en tu carrera deportiva?', '¿Qué te impide verte con claridad?', '¿Qué paso, por pequeño que sea, puedes dar para empezar a reconstruir tu autoimagen?']
+                    },
+                    repaired: 'nuevo, claro, dorado, liso y mediano'
+                },
+                'Puerta': {
+                    principal: 'Transiciones/Cambio',
+                    type: { 'Abierta': 'positive', 'Cerrada': 'negative', 'Rota': 'negative', 'Sólida': 'positive', 'Atascada': 'negative', 'Ornamentada': 'neutral' },
+                    states: {
+                        'Abierta': 'Disponibilidad al cambio, a nuevas oportunidades.',
+                        'Cerrada': 'Bloqueos, miedo a las transiciones o a la incertidumbre.',
+                        'Rota': 'Cambios forzados, inestabilidad o la sensación de que las oportunidades se han esfumado.',
+                        'Sólida': 'Estabilidad en los momentos de transición, pero también la posible rigidez ante el cambio necesario.',
+                        'Atascada': 'La sensación de que las transiciones están estancadas, una resistencia interna a avanzar.',
+                        'Ornamentada': 'Cambios que parecen hermosos por fuera, pero que pueden ser superficiales o vacíos.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué nuevas oportunidades sientes que se abren para ti?', '¿Cómo puedes atravesar esta puerta con confianza?', '¿Qué pasaría si te permites un cambio total?'],
+                        'negative': ['¿Qué cambio en tu vida o deporte se siente bloqueado?', '¿Qué te impide abrir esa puerta?', '¿Qué pequeña acción te acercaría a la transición que necesitas?']
+                    },
+                    repaired: 'abierta, blanca, lisa y mediana'
+                },
+                'Reloj': {
+                    principal: 'Relación con el Tiempo',
+                    type: { 'Funcionando': 'positive', 'Parado': 'negative', 'Roto': 'negative', 'Antiguo': 'negative', 'Acelerado': 'negative', 'Sin Manecillas': 'negative' },
+                    states: {
+                        'Funcionando': 'Un flujo temporal sano, un ritmo natural y un uso consciente del tiempo.',
+                        'Parado': 'El tiempo congelado por un evento significativo, como una lesión o un fracaso importante.',
+                        'Roto': 'Una relación distorsionada con el tiempo, donde el pasado, presente y futuro no están en armonía.',
+                        'Antiguo': 'La sensación de vivir en el pasado, anclado en viejos logros o fracasos.',
+                        'Acelerado': 'El tiempo apresurado, la ansiedad por los plazos y la sensación de que la vida deportiva se escapa.',
+                        'Sin Manecillas': 'Una pérdida total de control temporal, la incertidumbre sobre el futuro.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué ritmo es el ideal para ti en este momento?', '¿Cómo puedes aprovechar este flujo temporal para alcanzar tus metas?', '¿Qué te permite fluir con el tiempo en lugar de luchar contra él?'],
+                        'negative': ['¿En qué momento de tu vida se paró el reloj?', '¿Qué te ha llevado a esta urgencia temporal?', '¿Qué pequeña acción te devolvería el control sobre tu tiempo?']
+                    },
+                    repaired: 'funcionando, rítmico, verde, liso y mediano'
+                },
+                'Libro': {
+                    principal: 'Infancia/Aprendizaje',
+                    type: { 'Nuevo': 'positive', 'Desgastado': 'negative', 'Páginas en Blanco': 'positive', 'Roto': 'negative', 'Quemado': 'negative', 'Sobrescrito': 'negative' },
+                    states: {
+                        'Nuevo': 'Un potencial intacto, un lienzo en blanco para la nueva historia del deportista.',
+                        'Desgastado': 'Lecciones duras de la infancia, un pasado que pesa sobre el presente.',
+                        'Páginas en Blanco': 'Un futuro no escrito, un potencial no explorado que espera ser descubierto.',
+                        'Roto': 'Un aprendizaje interrumpido o la sensación de que un capítulo de tu vida se ha deshecho.',
+                        'Quemado': 'Lecciones destruidas por traumas intensos que han borrado el pasado.',
+                        'Sobrescrito': 'Un aprendizaje alterado, narrativas impuestas que no te pertenecen.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué historia quieres escribir en las páginas de tu futuro?', '¿Cómo puedes abrir este libro para empezar a aprender de nuevo?', '¿Qué capítulo de tu vida deportiva te da más orgullo?'],
+                        'negative': ['¿Qué lecciones de tu infancia o pasado pesan sobre ti?', '¿Qué historia estás intentando reescribir?', '¿Qué pequeño paso puedes dar para sanar ese capítulo roto?']
+                    },
+                    repaired: 'nuevo, abierto, rosa, liso y mediano'
+                },
+                'Río': {
+                    principal: 'Emociones/Flujo',
+                    type: { 'Tranquilo': 'positive', 'Turbulento': 'negative', 'Seco': 'negative', 'Desbordado': 'negative', 'Contaminado': 'negative', 'Congelado': 'negative' },
+                    states: {
+                        'Tranquilo': 'Emociones equilibradas, la capacidad de mantener la calma bajo presión.',
+                        'Turbulento': 'Emociones caóticas, un torrente de sentimientos incontrolables.',
+                        'Seco': 'Emociones reprimidas, una desconexión total con tu sentir.',
+                        'Desbordado': 'Emociones abrumadoras que te superan, como la presión o la frustración.',
+                        'Contaminado': 'Emociones tóxicas, como la envidia o el resentimiento que impiden el progreso.',
+                        'Congelado': 'Emociones inmovilizadas, la incapacidad de sentir o procesar lo que te sucede.'
+                    },
+                    questions: {
+                        'positive': ['¿Cómo puedes mantener este estado de fluidez en la competición?', '¿Qué te ayuda a canalizar tu energía emocional?', '¿Cómo purificas tu flujo mental para que sea imparable?'],
+                        'negative': ['¿Qué causa esa turbulencia en tus emociones?', '¿Qué te impide sentir?', '¿Qué primer paso puedes dar para liberar ese flujo estancado?']
+                    },
+                    repaired: 'tranquilo, claro, azul, liso y mediano'
+                },
+                'Vela': {
+                    principal: 'Esperanza/Espiritualidad',
+                    type: { 'Encendida': 'positive', 'Apagada': 'negative', 'Derritiéndose': 'negative', 'Intacta': 'positive', 'Humosa': 'negative', 'Doble Llama': 'neutral' },
+                    states: {
+                        'Encendida': 'La esperanza viva, la motivación y el propósito claro.',
+                        'Apagada': 'La pérdida de esperanza, el sentimiento de vacío o la falta de propósito.',
+                        'Derritiéndose': 'La esperanza que se agota, el "burnout" o el cansancio mental.',
+                        'Intacta': 'La esperanza potencial, un fuego que espera ser encendido.',
+                        'Humosa': 'La esperanza obscurecida por dudas profundas que te impiden ver con claridad.',
+                        'Doble Llama': 'La esperanza dividida, la dualidad entre dos caminos o dos deseos.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te ayuda a mantener viva la llama de tu pasión?', '¿Cómo puedes irradiar tu luz en los momentos de oscuridad?', '¿Qué te inspira a seguir avanzando?'],
+                        'negative': ['¿Qué apagó esa vela en tu camino?', '¿Qué dudas oscurecen tu visión?', '¿Qué harías para encender una nueva llama de esperanza?']
+                    },
+                    repaired: 'encendida, brillante, dorada, liso y mediano'
+                },
+                'Puente': {
+                    principal: 'Relaciones/Conexiones',
+                    type: { 'Sólido': 'positive', 'Inestable': 'negative', 'En Construcción': 'neutral', 'Antiguo': 'negative', 'Colgante': 'negative', 'Derrumbado': 'negative' },
+                    states: {
+                        'Sólido': 'Relaciones estables y conexiones que te dan apoyo.',
+                        'Inestable': 'Conexiones frágiles, un equipo que no se siente unido.',
+                        'En Construcción': 'Relaciones en desarrollo, un proceso de unión con el entorno deportivo o personal.',
+                        'Antiguo': 'Conexiones obsoletas, aferrándose a relaciones que ya no te sirven.',
+                        'Colgante': 'Conexiones precarias que te hacen sentir que puedes caer en cualquier momento.',
+                        'Derrumbado': 'Relaciones completamente rotas, la sensación de aislamiento y falta de apoyo.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué conexiones te dan más fuerza?', '¿Cómo puedes seguir construyendo puentes hacia tus compañeros y equipo?', '¿Qué relación te ha hecho más fuerte?'],
+                        'negative': ['¿Qué hace inestable ese puente relacional?', '¿Sientes que estás solo en tu camino?', '¿Qué paso, por pequeño que sea, puedes dar para empezar a reconstruir una conexión?']
+                    },
+                    repaired: 'sólido, ancho, blanco, liso y mediano'
+                },
+                'Llave': {
+                    principal: 'Acceso/Secretos',
+                    type: { 'Nueva': 'positive', 'Oxidada': 'negative', 'Rota': 'negative', 'Antigua': 'neutral', 'Doblada': 'negative', 'Perdida': 'negative' },
+                    states: {
+                        'Nueva': 'Un acceso fresco, un nuevo camino que se abre para ti.',
+                        'Oxidada': 'Secretos o emociones bloqueadas que no te permiten avanzar.',
+                        'Rota': 'Un acceso denegado a tu propio potencial, una puerta que se ha cerrado para siempre.',
+                        'Antigua': 'Secretos o conocimientos del pasado que pueden ser valiosos, pero difíciles de usar.',
+                        'Doblada': 'Un acceso distorsionado, la sensación de que el camino no es directo.',
+                        'Perdida': 'Secretos inaccesibles, una parte de ti que no puedes encontrar.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué puerta estás listo para abrir?', '¿Qué secreto te abrirá a un nuevo nivel de rendimiento?', '¿Cómo puedes usar esta llave para desbloquear tu potencial?'],
+                        'negative': ['¿Qué secreto oxida esa llave?', '¿Qué puerta sientes que no puedes abrir?', '¿Qué podrías hacer para recuperar esa llave perdida?']
+                    },
+                    repaired: 'nueva, brillante, violeta, lisa y mediana'
+                },
+                'Coche': {
+                    principal: 'Autonomía/Independencia',
+                    type: { 'Nuevo': 'positive', 'Averiado': 'negative', 'Viejo': 'neutral', 'Sin Combustible': 'negative', 'Sobrecargado': 'negative', 'Chocado': 'negative' },
+                    states: {
+                        'Nuevo': 'Una autonomía fresca, un camino claro y sin obstáculos.',
+                        'Averiado': 'Una independencia rota, la sensación de no poder avanzar por ti mismo.',
+                        'Viejo': 'Una autonomía desgastada, la experiencia y la sabiduría, pero con posibles limitaciones.',
+                        'Sin Combustible': 'Una autonomía agotada, la sensación de que has perdido tu motivación o energía.',
+                        'Sobrecargado': 'Una autonomía abrumada por la presión de las expectativas.',
+                        'Chocado': 'Una autonomía impactada por un evento repentino, como una lesión grave.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te hace sentir imparable?', '¿Cómo puedes mantener tu energía para seguir adelante?', '¿Qué vehículo ideal conduces?'],
+                        'negative': ['¿Qué averió tu independencia?', '¿Cómo aligeras esa sobrecarga?', '¿Qué te impide conducir tu propio camino?']
+                    },
+                    repaired: 'nuevo, rápido, dorado, liso y mediano'
+                },
+                'Casa': {
+                    principal: 'Familia/Hogar Interno',
+                    type: { 'Sólida': 'positive', 'En Ruinas': 'negative', 'En Construcción': 'neutral', 'Vacía': 'negative', 'Embrujada': 'negative', 'Expandida': 'positive' },
+                    states: {
+                        'Sólida': 'Un hogar interno estable, un refugio seguro en ti mismo.',
+                        'En Ruinas': 'Un hogar interno roto, un sentimiento de familia fragmentada.',
+                        'En Construcción': 'Un hogar en reconstrucción, un proceso de sanación y crecimiento.',
+                        'Vacía': 'La soledad interna, la sensación de que falta algo en tu vida.',
+                        'Embrujada': 'Un hogar con traumas del pasado que persisten en el presente.',
+                        'Expandida': 'Un hogar en crecimiento, la sensación de que estás evolucionando y creando espacio para más.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te hace sentir seguro y estable?', '¿Cómo puedes nutrir tu hogar interno?', '¿Qué te hace sentir más conectado con tu equipo o familia?'],
+                        'negative': ['¿Qué sombras embrujan tu hogar interno?', '¿Cómo podrías empezar a reconstruir lo que está en ruinas?', '¿Qué te ayudará a limpiar ese espacio interior para que sea un lugar de paz?']
+                    },
+                    repaired: 'sólida, acogedora, rosa, caliente y mediana'
+                }
+            }
+        };
+
+        // Datos de simbolismos para análisis
+        const simbolismos = {
+            colors: {
+                'Dorado': { text: 'Iluminación, éxito, valor personal, divinidad o potencial realizado. En el deporte: la búsqueda de la gloria y el máximo rendimiento.', type: 'positive' },
+                'Negro': { text: 'Oscuridad, miedo, desconocido, depresión o pérdida. En el deporte: un fracaso que pesa, una etapa de incertidumbre o una herida emocional oculta.', type: 'negative' },
+                'Blanco': { text: 'Pureza, inocencia, renovación o claridad. En el deporte: el deseo de un "borrón y cuenta nueva", un nuevo comienzo o la transparencia en las intenciones.', type: 'positive' },
+                'Rojo': { text: 'Pasión, ira, energía vital o peligro. En el deporte: la rabia competitiva, la energía que impulsa o la señal de alerta ante una posible lesión o burnout.', type: 'neutral' },
+                'Azul': { text: 'Calma, introspección, tristeza o confianza. En el deporte: la habilidad de mantener la serenidad bajo presión o el sentimiento de melancolía por un objetivo no alcanzado.', type: 'neutral' },
+                'Rosa': { text: 'Amor, suavidad, vulnerabilidad o sanación emocional. En el deporte: el cuidado hacia uno mismo, la autoaceptación y la empatía con el proceso.', type: 'positive' },
+                'Violeta': { text: 'Espiritualidad, transformación, misterio o intuición. En el deporte: un cambio profundo, una transición de nivel o la conexión con la voz interior que guía el juego.', type: 'positive' },
+                'Plata': { text: 'Reflexión, modernidad, frialdad metálica o adaptabilidad. En el deporte: la autoimagen "fría" e impenetrable o la capacidad de fluir con las presiones mediáticas y del entorno.', type: 'neutral' },
+                'Marrón': { text: 'Estabilidad, tierra, realismo o estancamiento. En el deporte: la sensación de "estar estancado" en un nivel, la solidez en la técnica o los cimientos problemáticos en la formación deportiva.', type: 'neutral' },
+                'Verde': { text: 'Crecimiento, renovación, envidia o naturaleza. En el deporte: el crecimiento personal, la regeneración física o la envidia que surge al ver el éxito de otros.', type: 'neutral' }
+            },
+            textures: {
+                'Lisa': { text: 'Armonía, fluidez, paz o facilidad en el proceso. En el deporte: un rendimiento que fluye sin esfuerzo, un camino despejado.', type: 'positive' },
+                'Áspera': { text: 'Conflictos, rugosidad emocional, dificultades. En el deporte: experiencias "ásperas" como críticas, rivalidades o un camino lleno de obstáculos.', type: 'negative' },
+                'Pegajosa': { text: 'Adherencia, dependencias, algo que "se pega" y no se suelta. En el deporte: recuerdos persistentes de un error, la presión de expectativas que no se disuelve o una "mala racha".', type: 'negative' },
+                'Fría': { text: 'Distancia, aislamiento, frialdad emocional o rechazo. En el deporte: la sensación de soledad en el equipo o el "congelamiento" mental en momentos clave de la competición.', type: 'negative' },
+                'Caliente': { text: 'Pasión intensa, ira, calidez o urgencia. En el deporte: la energía que arde en el interior, la pasión por el juego o el sentimiento de "burnout" o saturación.', type: 'neutral' }
+            },
+            sizes: {
+                'Pequeño': { text: 'Sentirse diminuto, insignificante o minimizado. En el deporte: una baja autoestima que te hace sentir que no vales o que tu esfuerzo no es suficiente.', type: 'negative' },
+                'Mediano': { text: 'Equilibrio, normalidad, algo manejable y realista. En el deporte: un estado de homeostasis, de aceptación y de control sobre las situaciones.', type: 'positive' },
+                'Grande': { text: 'Abrumador, dominante, expansivo o intimidante. En el deporte: un desafío que te sobrepasa, la presión pública o un fracaso que sientes que ocupa todo tu ser.', type: 'negative' }
+            },
+            objects: {
+                'Espejo': {
+                    principal: 'Ego/Auto-percepción',
+                    type: { 'Nuevo': 'positive', 'Roto': 'negative', 'Sucio': 'negative', 'Antiguo': 'negative', 'Empañado': 'negative', 'Distorsionado': 'negative' },
+                    states: {
+                        'Nuevo': 'Una nueva autoimagen, un renacimiento.',
+                        'Roto': 'El ego fragmentado, una identidad dañada por fracasos o críticas.',
+                        'Sucio': 'La autopercepción distorsionada, una sensación de culpa o vergüenza acumulada.',
+                        'Antiguo': 'Una autoestima estancada, aferrada a un pasado glorioso que ya no existe.',
+                        'Empañado': 'La visión borrosa del yo, una confusión emocional que impide verse con claridad.',
+                        'Distorsionado': 'Una percepción alterada de uno mismo, como en la dismorfia corporal o las presiones externas del deporte.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué nueva imagen de ti mismo estás dispuesto a abrazar?', '¿Cómo puedes potenciar esta claridad y llevarla a tu rendimiento?', '¿Qué reflejo ideal quieres ver en el futuro?'],
+                        'negative': ['¿Qué parte de ti se siente rota o fragmentada en tu carrera deportiva?', '¿Qué te impide verte con claridad?', '¿Qué paso, por pequeño que sea, puedes dar para empezar a reconstruir tu autoimagen?']
+                    },
+                    repaired: 'nuevo, claro, dorado, liso y mediano'
+                },
+                'Puerta': {
+                    principal: 'Transiciones/Cambio',
+                    type: { 'Abierta': 'positive', 'Cerrada': 'negative', 'Rota': 'negative', 'Sólida': 'positive', 'Atascada': 'negative', 'Ornamentada': 'neutral' },
+                    states: {
+                        'Abierta': 'Disponibilidad al cambio, a nuevas oportunidades.',
+                        'Cerrada': 'Bloqueos, miedo a las transiciones o a la incertidumbre.',
+                        'Rota': 'Cambios forzados, inestabilidad o la sensación de que las oportunidades se han esfumado.',
+                        'Sólida': 'Estabilidad en los momentos de transición, pero también la posible rigidez ante el cambio necesario.',
+                        'Atascada': 'La sensación de que las transiciones están estancadas, una resistencia interna a avanzar.',
+                        'Ornamentada': 'Cambios que parecen hermosos por fuera, pero que pueden ser superficiales o vacíos.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué nuevas oportunidades sientes que se abren para ti?', '¿Cómo puedes atravesar esta puerta con confianza?', '¿Qué pasaría si te permites un cambio total?'],
+                        'negative': ['¿Qué cambio en tu vida o deporte se siente bloqueado?', '¿Qué te impide abrir esa puerta?', '¿Qué pequeña acción te acercaría a la transición que necesitas?']
+                    },
+                    repaired: 'abierta, blanca, lisa y mediana'
+                },
+                'Reloj': {
+                    principal: 'Relación con el Tiempo',
+                    type: { 'Funcionando': 'positive', 'Parado': 'negative', 'Roto': 'negative', 'Antiguo': 'negative', 'Acelerado': 'negative', 'Sin Manecillas': 'negative' },
+                    states: {
+                        'Funcionando': 'Un flujo temporal sano, un ritmo natural y un uso consciente del tiempo.',
+                        'Parado': 'El tiempo congelado por un evento significativo, como una lesión o un fracaso importante.',
+                        'Roto': 'Una relación distorsionada con el tiempo, donde el pasado, presente y futuro no están en armonía.',
+                        'Antiguo': 'La sensación de vivir en el pasado, anclado en viejos logros o fracasos.',
+                        'Acelerado': 'El tiempo apresurado, la ansiedad por los plazos y la sensación de que la vida deportiva se escapa.',
+                        'Sin Manecillas': 'Una pérdida total de control temporal, la incertidumbre sobre el futuro.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué ritmo es el ideal para ti en este momento?', '¿Cómo puedes aprovechar este flujo temporal para alcanzar tus metas?', '¿Qué te permite fluir con el tiempo en lugar de luchar contra él?'],
+                        'negative': ['¿En qué momento de tu vida se paró el reloj?', '¿Qué te ha llevado a esta urgencia temporal?', '¿Qué pequeña acción te devolvería el control sobre tu tiempo?']
+                    },
+                    repaired: 'funcionando, rítmico, verde, liso y mediano'
+                },
+                'Libro': {
+                    principal: 'Infancia/Aprendizaje',
+                    type: { 'Nuevo': 'positive', 'Desgastado': 'negative', 'Páginas en Blanco': 'positive', 'Roto': 'negative', 'Quemado': 'negative', 'Sobrescrito': 'negative' },
+                    states: {
+                        'Nuevo': 'Un potencial intacto, un lienzo en blanco para la nueva historia del deportista.',
+                        'Desgastado': 'Lecciones duras de la infancia, un pasado que pesa sobre el presente.',
+                        'Páginas en Blanco': 'Un futuro no escrito, un potencial no explorado que espera ser descubierto.',
+                        'Roto': 'Un aprendizaje interrumpido o la sensación de que un capítulo de tu vida se ha deshecho.',
+                        'Quemado': 'Lecciones destruidas por traumas intensos que han borrado el pasado.',
+                        'Sobrescrito': 'Un aprendizaje alterado, narrativas impuestas que no te pertenecen.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué historia quieres escribir en las páginas de tu futuro?', '¿Cómo puedes abrir este libro para empezar a aprender de nuevo?', '¿Qué capítulo de tu vida deportiva te da más orgullo?'],
+                        'negative': ['¿Qué lecciones de tu infancia o pasado pesan sobre ti?', '¿Qué historia estás intentando reescribir?', '¿Qué pequeño paso puedes dar para sanar ese capítulo roto?']
+                    },
+                    repaired: 'nuevo, abierto, rosa, liso y mediano'
+                },
+                'Río': {
+                    principal: 'Emociones/Flujo',
+                    type: { 'Tranquilo': 'positive', 'Turbulento': 'negative', 'Seco': 'negative', 'Desbordado': 'negative', 'Contaminado': 'negative', 'Congelado': 'negative' },
+                    states: {
+                        'Tranquilo': 'Emociones equilibradas, la capacidad de mantener la calma bajo presión.',
+                        'Turbulento': 'Emociones caóticas, un torrente de sentimientos incontrolables.',
+                        'Seco': 'Emociones reprimidas, una desconexión total con tu sentir.',
+                        'Desbordado': 'Emociones abrumadoras que te superan, como la presión o la frustración.',
+                        'Contaminado': 'Emociones tóxicas, como la envidia o el resentimiento que impiden el progreso.',
+                        'Congelado': 'Emociones inmovilizadas, la incapacidad de sentir o procesar lo que te sucede.'
+                    },
+                    questions: {
+                        'positive': ['¿Cómo puedes mantener este estado de fluidez en la competición?', '¿Qué te ayuda a canalizar tu energía emocional?', '¿Cómo purificas tu flujo mental para que sea imparable?'],
+                        'negative': ['¿Qué causa esa turbulencia en tus emociones?', '¿Qué te impide sentir?', '¿Qué primer paso puedes dar para liberar ese flujo estancado?']
+                    },
+                    repaired: 'tranquilo, claro, azul, liso y mediano'
+                },
+                'Vela': {
+                    principal: 'Esperanza/Espiritualidad',
+                    type: { 'Encendida': 'positive', 'Apagada': 'negative', 'Derritiéndose': 'negative', 'Intacta': 'positive', 'Humosa': 'negative', 'Doble Llama': 'neutral' },
+                    states: {
+                        'Encendida': 'La esperanza viva, la motivación y el propósito claro.',
+                        'Apagada': 'La pérdida de esperanza, el sentimiento de vacío o la falta de propósito.',
+                        'Derritiéndose': 'La esperanza que se agota, el "burnout" o el cansancio mental.',
+                        'Intacta': 'La esperanza potencial, un fuego que espera ser encendido.',
+                        'Humosa': 'La esperanza obscurecida por dudas profundas que te impiden ver con claridad.',
+                        'Doble Llama': 'La esperanza dividida, la dualidad entre dos caminos o dos deseos.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te ayuda a mantener viva la llama de tu pasión?', '¿Cómo puedes irradiar tu luz en los momentos de oscuridad?', '¿Qué te inspira a seguir avanzando?'],
+                        'negative': ['¿Qué apagó esa vela en tu camino?', '¿Qué dudas oscurecen tu visión?', '¿Qué harías para encender una nueva llama de esperanza?']
+                    },
+                    repaired: 'encendida, brillante, dorada, liso y mediano'
+                },
+                'Puente': {
+                    principal: 'Relaciones/Conexiones',
+                    type: { 'Sólido': 'positive', 'Inestable': 'negative', 'En Construcción': 'neutral', 'Antiguo': 'negative', 'Colgante': 'negative', 'Derrumbado': 'negative' },
+                    states: {
+                        'Sólido': 'Relaciones estables y conexiones que te dan apoyo.',
+                        'Inestable': 'Conexiones frágiles, un equipo que no se siente unido.',
+                        'En Construcción': 'Relaciones en desarrollo, un proceso de unión con el entorno deportivo o personal.',
+                        'Antiguo': 'Conexiones obsoletas, aferrándose a relaciones que ya no te sirven.',
+                        'Colgante': 'Conexiones precarias que te hacen sentir que puedes caer en cualquier momento.',
+                        'Derrumbado': 'Relaciones completamente rotas, la sensación de aislamiento y falta de apoyo.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué conexiones te dan más fuerza?', '¿Cómo puedes seguir construyendo puentes hacia tus compañeros y equipo?', '¿Qué relación te ha hecho más fuerte?'],
+                        'negative': ['¿Qué hace inestable ese puente relacional?', '¿Sientes que estás solo en tu camino?', '¿Qué paso, por pequeño que sea, puedes dar para empezar a reconstruir una conexión?']
+                    },
+                    repaired: 'sólido, ancho, blanco, liso y mediano'
+                },
+                'Llave': {
+                    principal: 'Acceso/Secretos',
+                    type: { 'Nueva': 'positive', 'Oxidada': 'negative', 'Rota': 'negative', 'Antigua': 'neutral', 'Doblada': 'negative', 'Perdida': 'negative' },
+                    states: {
+                        'Nueva': 'Un acceso fresco, un nuevo camino que se abre para ti.',
+                        'Oxidada': 'Secretos o emociones bloqueadas que no te permiten avanzar.',
+                        'Rota': 'Un acceso denegado a tu propio potencial, una puerta que se ha cerrado para siempre.',
+                        'Antigua': 'Secretos o conocimientos del pasado que pueden ser valiosos, pero difíciles de usar.',
+                        'Doblada': 'Un acceso distorsionado, la sensación de que el camino no es directo.',
+                        'Perdida': 'Secretos inaccesibles, una parte de ti que no puedes encontrar.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué puerta estás listo para abrir?', '¿Qué secreto te abrirá a un nuevo nivel de rendimiento?', '¿Cómo puedes usar esta llave para desbloquear tu potencial?'],
+                        'negative': ['¿Qué secreto oxida esa llave?', '¿Qué puerta sientes que no puedes abrir?', '¿Qué podrías hacer para recuperar esa llave perdida?']
+                    },
+                    repaired: 'nueva, brillante, violeta, lisa y mediana'
+                },
+                'Coche': {
+                    principal: 'Autonomía/Independencia',
+                    type: { 'Nuevo': 'positive', 'Averiado': 'negative', 'Viejo': 'neutral', 'Sin Combustible': 'negative', 'Sobrecargado': 'negative', 'Chocado': 'negative' },
+                    states: {
+                        'Nuevo': 'Una autonomía fresca, un camino claro y sin obstáculos.',
+                        'Averiado': 'Una independencia rota, la sensación de no poder avanzar por ti mismo.',
+                        'Viejo': 'Una autonomía desgastada, la experiencia y la sabiduría, pero con posibles limitaciones.',
+                        'Sin Combustible': 'Una autonomía agotada, la sensación de que has perdido tu motivación o energía.',
+                        'Sobrecargado': 'Una autonomía abrumada por la presión de las expectativas.',
+                        'Chocado': 'Una autonomía impactada por un evento repentino, como una lesión grave.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te hace sentir imparable?', '¿Cómo puedes mantener tu energía para seguir adelante?', '¿Qué vehículo ideal conduces?'],
+                        'negative': ['¿Qué averió tu independencia?', '¿Cómo aligeras esa sobrecarga?', '¿Qué te impide conducir tu propio camino?']
+                    },
+                    repaired: 'nuevo, rápido, dorado, liso y mediano'
+                },
+                'Casa': {
+                    principal: 'Familia/Hogar Interno',
+                    type: { 'Sólida': 'positive', 'En Ruinas': 'negative', 'En Construcción': 'neutral', 'Vacía': 'negative', 'Embrujada': 'negative', 'Expandida': 'positive' },
+                    states: {
+                        'Sólida': 'Un hogar interno estable, un refugio seguro en ti mismo.',
+                        'En Ruinas': 'Un hogar interno roto, un sentimiento de familia fragmentada.',
+                        'En Construcción': 'Un hogar en reconstrucción, un proceso de sanación y crecimiento.',
+                        'Vacía': 'La soledad interna, la sensación de que falta algo en tu vida.',
+                        'Embrujada': 'Un hogar con traumas del pasado que persisten en el presente.',
+                        'Expandida': 'Un hogar en crecimiento, la sensación de que estás evolucionando y creando espacio para más.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te hace sentir seguro y estable?', '¿Cómo puedes nutrir tu hogar interno?', '¿Qué te hace sentir más conectado con tu equipo o familia?'],
+                        'negative': ['¿Qué sombras embrujan tu hogar interno?', '¿Cómo podrías empezar a reconstruir lo que está en ruinas?', '¿Qué te ayudará a limpiar ese espacio interior para que sea un lugar de paz?']
+                    },
+                    repaired: 'sólida, acogedora, rosa, caliente y mediana'
+                }
+            }
+        };
+
+        // Datos de simbolismos para análisis
+        const simbolismos = {
+            colors: {
+                'Dorado': { text: 'Iluminación, éxito, valor personal, divinidad o potencial realizado. En el deporte: la búsqueda de la gloria y el máximo rendimiento.', type: 'positive' },
+                'Negro': { text: 'Oscuridad, miedo, desconocido, depresión o pérdida. En el deporte: un fracaso que pesa, una etapa de incertidumbre o una herida emocional oculta.', type: 'negative' },
+                'Blanco': { text: 'Pureza, inocencia, renovación o claridad. En el deporte: el deseo de un "borrón y cuenta nueva", un nuevo comienzo o la transparencia en las intenciones.', type: 'positive' },
+                'Rojo': { text: 'Pasión, ira, energía vital o peligro. En el deporte: la rabia competitiva, la energía que impulsa o la señal de alerta ante una posible lesión o burnout.', type: 'neutral' },
+                'Azul': { text: 'Calma, introspección, tristeza o confianza. En el deporte: la habilidad de mantener la serenidad bajo presión o el sentimiento de melancolía por un objetivo no alcanzado.', type: 'neutral' },
+                'Rosa': { text: 'Amor, suavidad, vulnerabilidad o sanación emocional. En el deporte: el cuidado hacia uno mismo, la autoaceptación y la empatía con el proceso.', type: 'positive' },
+                'Violeta': { text: 'Espiritualidad, transformación, misterio o intuición. En el deporte: un cambio profundo, una transición de nivel o la conexión con la voz interior que guía el juego.', type: 'positive' },
+                'Plata': { text: 'Reflexión, modernidad, frialdad metálica o adaptabilidad. En el deporte: la autoimagen "fría" e impenetrable o la capacidad de fluir con las presiones mediáticas y del entorno.', type: 'neutral' },
+                'Marrón': { text: 'Estabilidad, tierra, realismo o estancamiento. En el deporte: la sensación de "estar estancado" en un nivel, la solidez en la técnica o los cimientos problemáticos en la formación deportiva.', type: 'neutral' },
+                'Verde': { text: 'Crecimiento, renovación, envidia o naturaleza. En el deporte: el crecimiento personal, la regeneración física o la envidia que surge al ver el éxito de otros.', type: 'neutral' }
+            },
+            textures: {
+                'Lisa': { text: 'Armonía, fluidez, paz o facilidad en el proceso. En el deporte: un rendimiento que fluye sin esfuerzo, un camino despejado.', type: 'positive' },
+                'Áspera': { text: 'Conflictos, rugosidad emocional, dificultades. En el deporte: experiencias "ásperas" como críticas, rivalidades o un camino lleno de obstáculos.', type: 'negative' },
+                'Pegajosa': { text: 'Adherencia, dependencias, algo que "se pega" y no se suelta. En el deporte: recuerdos persistentes de un error, la presión de expectativas que no se disuelve o una "mala racha".', type: 'negative' },
+                'Fría': { text: 'Distancia, aislamiento, frialdad emocional o rechazo. En el deporte: la sensación de soledad en el equipo o el "congelamiento" mental en momentos clave de la competición.', type: 'negative' },
+                'Caliente': { text: 'Pasión intensa, ira, calidez o urgencia. En el deporte: la energía que arde en el interior, la pasión por el juego o el sentimiento de "burnout" o saturación.', type: 'neutral' }
+            },
+            sizes: {
+                'Pequeño': { text: 'Sentirse diminuto, insignificante o minimizado. En el deporte: una baja autoestima que te hace sentir que no vales o que tu esfuerzo no es suficiente.', type: 'negative' },
+                'Mediano': { text: 'Equilibrio, normalidad, algo manejable y realista. En el deporte: un estado de homeostasis, de aceptación y de control sobre las situaciones.', type: 'positive' },
+                'Grande': { text: 'Abrumador, dominante, expansivo o intimidante. En el deporte: un desafío que te sobrepasa, la presión pública o un fracaso que sientes que ocupa todo tu ser.', type: 'negative' }
+            },
+            objects: {
+                'Espejo': {
+                    principal: 'Ego/Auto-percepción',
+                    type: { 'Nuevo': 'positive', 'Roto': 'negative', 'Sucio': 'negative', 'Antiguo': 'negative', 'Empañado': 'negative', 'Distorsionado': 'negative' },
+                    states: {
+                        'Nuevo': 'Una nueva autoimagen, un renacimiento.',
+                        'Roto': 'El ego fragmentado, una identidad dañada por fracasos o críticas.',
+                        'Sucio': 'La autopercepción distorsionada, una sensación de culpa o vergüenza acumulada.',
+                        'Antiguo': 'Una autoestima estancada, aferrada a un pasado glorioso que ya no existe.',
+                        'Empañado': 'La visión borrosa del yo, una confusión emocional que impide verse con claridad.',
+                        'Distorsionado': 'Una percepción alterada de uno mismo, como en la dismorfia corporal o las presiones externas del deporte.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué nueva imagen de ti mismo estás dispuesto a abrazar?', '¿Cómo puedes potenciar esta claridad y llevarla a tu rendimiento?', '¿Qué reflejo ideal quieres ver en el futuro?'],
+                        'negative': ['¿Qué parte de ti se siente rota o fragmentada en tu carrera deportiva?', '¿Qué te impide verte con claridad?', '¿Qué paso, por pequeño que sea, puedes dar para empezar a reconstruir tu autoimagen?']
+                    },
+                    repaired: 'nuevo, claro, dorado, liso y mediano'
+                },
+                'Puerta': {
+                    principal: 'Transiciones/Cambio',
+                    type: { 'Abierta': 'positive', 'Cerrada': 'negative', 'Rota': 'negative', 'Sólida': 'positive', 'Atascada': 'negative', 'Ornamentada': 'neutral' },
+                    states: {
+                        'Abierta': 'Disponibilidad al cambio, a nuevas oportunidades.',
+                        'Cerrada': 'Bloqueos, miedo a las transiciones o a la incertidumbre.',
+                        'Rota': 'Cambios forzados, inestabilidad o la sensación de que las oportunidades se han esfumado.',
+                        'Sólida': 'Estabilidad en los momentos de transición, pero también la posible rigidez ante el cambio necesario.',
+                        'Atascada': 'La sensación de que las transiciones están estancadas, una resistencia interna a avanzar.',
+                        'Ornamentada': 'Cambios que parecen hermosos por fuera, pero que pueden ser superficiales o vacíos.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué nuevas oportunidades sientes que se abren para ti?', '¿Cómo puedes atravesar esta puerta con confianza?', '¿Qué pasaría si te permites un cambio total?'],
+                        'negative': ['¿Qué cambio en tu vida o deporte se siente bloqueado?', '¿Qué te impide abrir esa puerta?', '¿Qué pequeña acción te acercaría a la transición que necesitas?']
+                    },
+                    repaired: 'abierta, blanca, lisa y mediana'
+                },
+                'Reloj': {
+                    principal: 'Relación con el Tiempo',
+                    type: { 'Funcionando': 'positive', 'Parado': 'negative', 'Roto': 'negative', 'Antiguo': 'negative', 'Acelerado': 'negative', 'Sin Manecillas': 'negative' },
+                    states: {
+                        'Funcionando': 'Un flujo temporal sano, un ritmo natural y un uso consciente del tiempo.',
+                        'Parado': 'El tiempo congelado por un evento significativo, como una lesión o un fracaso importante.',
+                        'Roto': 'Una relación distorsionada con el tiempo, donde el pasado, presente y futuro no están en armonía.',
+                        'Antiguo': 'La sensación de vivir en el pasado, anclado en viejos logros o fracasos.',
+                        'Acelerado': 'El tiempo apresurado, la ansiedad por los plazos y la sensación de que la vida deportiva se escapa.',
+                        'Sin Manecillas': 'Una pérdida total de control temporal, la incertidumbre sobre el futuro.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué ritmo es el ideal para ti en este momento?', '¿Cómo puedes aprovechar este flujo temporal para alcanzar tus metas?', '¿Qué te permite fluir con el tiempo en lugar de luchar contra él?'],
+                        'negative': ['¿En qué momento de tu vida se paró el reloj?', '¿Qué te ha llevado a esta urgencia temporal?', '¿Qué pequeña acción te devolvería el control sobre tu tiempo?']
+                    },
+                    repaired: 'funcionando, rítmico, verde, liso y mediano'
+                },
+                'Libro': {
+                    principal: 'Infancia/Aprendizaje',
+                    type: { 'Nuevo': 'positive', 'Desgastado': 'negative', 'Páginas en Blanco': 'positive', 'Roto': 'negative', 'Quemado': 'negative', 'Sobrescrito': 'negative' },
+                    states: {
+                        'Nuevo': 'Un potencial intacto, un lienzo en blanco para la nueva historia del deportista.',
+                        'Desgastado': 'Lecciones duras de la infancia, un pasado que pesa sobre el presente.',
+                        'Páginas en Blanco': 'Un futuro no escrito, un potencial no explorado que espera ser descubierto.',
+                        'Roto': 'Un aprendizaje interrumpido o la sensación de que un capítulo de tu vida se ha deshecho.',
+                        'Quemado': 'Lecciones destruidas por traumas intensos que han borrado el pasado.',
+                        'Sobrescrito': 'Un aprendizaje alterado, narrativas impuestas que no te pertenecen.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué historia quieres escribir en las páginas de tu futuro?', '¿Cómo puedes abrir este libro para empezar a aprender de nuevo?', '¿Qué capítulo de tu vida deportiva te da más orgullo?'],
+                        'negative': ['¿Qué lecciones de tu infancia o pasado pesan sobre ti?', '¿Qué historia estás intentando reescribir?', '¿Qué pequeño paso puedes dar para sanar ese capítulo roto?']
+                    },
+                    repaired: 'nuevo, abierto, rosa, liso y mediano'
+                },
+                'Río': {
+                    principal: 'Emociones/Flujo',
+                    type: { 'Tranquilo': 'positive', 'Turbulento': 'negative', 'Seco': 'negative', 'Desbordado': 'negative', 'Contaminado': 'negative', 'Congelado': 'negative' },
+                    states: {
+                        'Tranquilo': 'Emociones equilibradas, la capacidad de mantener la calma bajo presión.',
+                        'Turbulento': 'Emociones caóticas, un torrente de sentimientos incontrolables.',
+                        'Seco': 'Emociones reprimidas, una desconexión total con tu sentir.',
+                        'Desbordado': 'Emociones abrumadoras que te superan, como la presión o la frustración.',
+                        'Contaminado': 'Emociones tóxicas, como la envidia o el resentimiento que impiden el progreso.',
+                        'Congelado': 'Emociones inmovilizadas, la incapacidad de sentir o procesar lo que te sucede.'
+                    },
+                    questions: {
+                        'positive': ['¿Cómo puedes mantener este estado de fluidez en la competición?', '¿Qué te ayuda a canalizar tu energía emocional?', '¿Cómo purificas tu flujo mental para que sea imparable?'],
+                        'negative': ['¿Qué causa esa turbulencia en tus emociones?', '¿Qué te impide sentir?', '¿Qué primer paso puedes dar para liberar ese flujo estancado?']
+                    },
+                    repaired: 'tranquilo, claro, azul, liso y mediano'
+                },
+                'Vela': {
+                    principal: 'Esperanza/Espiritualidad',
+                    type: { 'Encendida': 'positive', 'Apagada': 'negative', 'Derritiéndose': 'negative', 'Intacta': 'positive', 'Humosa': 'negative', 'Doble Llama': 'neutral' },
+                    states: {
+                        'Encendida': 'La esperanza viva, la motivación y el propósito claro.',
+                        'Apagada': 'La pérdida de esperanza, el sentimiento de vacío o la falta de propósito.',
+                        'Derritiéndose': 'La esperanza que se agota, el "burnout" o el cansancio mental.',
+                        'Intacta': 'La esperanza potencial, un fuego que espera ser encendido.',
+                        'Humosa': 'La esperanza obscurecida por dudas profundas que te impiden ver con claridad.',
+                        'Doble Llama': 'La esperanza dividida, la dualidad entre dos caminos o dos deseos.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te ayuda a mantener viva la llama de tu pasión?', '¿Cómo puedes irradiar tu luz en los momentos de oscuridad?', '¿Qué te inspira a seguir avanzando?'],
+                        'negative': ['¿Qué apagó esa vela en tu camino?', '¿Qué dudas oscurecen tu visión?', '¿Qué harías para encender una nueva llama de esperanza?']
+                    },
+                    repaired: 'encendida, brillante, dorada, liso y mediano'
+                },
+                'Puente': {
+                    principal: 'Relaciones/Conexiones',
+                    type: { 'Sólido': 'positive', 'Inestable': 'negative', 'En Construcción': 'neutral', 'Antiguo': 'negative', 'Colgante': 'negative', 'Derrumbado': 'negative' },
+                    states: {
+                        'Sólido': 'Relaciones estables y conexiones que te dan apoyo.',
+                        'Inestable': 'Conexiones frágiles, un equipo que no se siente unido.',
+                        'En Construcción': 'Relaciones en desarrollo, un proceso de unión con el entorno deportivo o personal.',
+                        'Antiguo': 'Conexiones obsoletas, aferrándose a relaciones que ya no te sirven.',
+                        'Colgante': 'Conexiones precarias que te hacen sentir que puedes caer en cualquier momento.',
+                        'Derrumbado': 'Relaciones completamente rotas, la sensación de aislamiento y falta de apoyo.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué conexiones te dan más fuerza?', '¿Cómo puedes seguir construyendo puentes hacia tus compañeros y equipo?', '¿Qué relación te ha hecho más fuerte?'],
+                        'negative': ['¿Qué hace inestable ese puente relacional?', '¿Sientes que estás solo en tu camino?', '¿Qué paso, por pequeño que sea, puedes dar para empezar a reconstruir una conexión?']
+                    },
+                    repaired: 'sólido, ancho, blanco, liso y mediano'
+                },
+                'Llave': {
+                    principal: 'Acceso/Secretos',
+                    type: { 'Nueva': 'positive', 'Oxidada': 'negative', 'Rota': 'negative', 'Antigua': 'neutral', 'Doblada': 'negative', 'Perdida': 'negative' },
+                    states: {
+                        'Nueva': 'Un acceso fresco, un nuevo camino que se abre para ti.',
+                        'Oxidada': 'Secretos o emociones bloqueadas que no te permiten avanzar.',
+                        'Rota': 'Un acceso denegado a tu propio potencial, una puerta que se ha cerrado para siempre.',
+                        'Antigua': 'Secretos o conocimientos del pasado que pueden ser valiosos, pero difíciles de usar.',
+                        'Doblada': 'Un acceso distorsionado, la sensación de que el camino no es directo.',
+                        'Perdida': 'Secretos inaccesibles, una parte de ti que no puedes encontrar.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué puerta estás listo para abrir?', '¿Qué secreto te abrirá a un nuevo nivel de rendimiento?', '¿Cómo puedes usar esta llave para desbloquear tu potencial?'],
+                        'negative': ['¿Qué secreto oxida esa llave?', '¿Qué puerta sientes que no puedes abrir?', '¿Qué podrías hacer para recuperar esa llave perdida?']
+                    },
+                    repaired: 'nueva, brillante, violeta, lisa y mediana'
+                },
+                'Coche': {
+                    principal: 'Autonomía/Independencia',
+                    type: { 'Nuevo': 'positive', 'Averiado': 'negative', 'Viejo': 'neutral', 'Sin Combustible': 'negative', 'Sobrecargado': 'negative', 'Chocado': 'negative' },
+                    states: {
+                        'Nuevo': 'Una autonomía fresca, un camino claro y sin obstáculos.',
+                        'Averiado': 'Una independencia rota, la sensación de no poder avanzar por ti mismo.',
+                        'Viejo': 'Una autonomía desgastada, la experiencia y la sabiduría, pero con posibles limitaciones.',
+                        'Sin Combustible': 'Una autonomía agotada, la sensación de que has perdido tu motivación o energía.',
+                        'Sobrecargado': 'Una autonomía abrumada por la presión de las expectativas.',
+                        'Chocado': 'Una autonomía impactada por un evento repentino, como una lesión grave.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te hace sentir imparable?', '¿Cómo puedes mantener tu energía para seguir adelante?', '¿Qué vehículo ideal conduces?'],
+                        'negative': ['¿Qué averió tu independencia?', '¿Cómo aligeras esa sobrecarga?', '¿Qué te impide conducir tu propio camino?']
+                    },
+                    repaired: 'nuevo, rápido, dorado, liso y mediano'
+                },
+                'Casa': {
+                    principal: 'Familia/Hogar Interno',
+                    type: { 'Sólida': 'positive', 'En Ruinas': 'negative', 'En Construcción': 'neutral', 'Vacía': 'negative', 'Embrujada': 'negative', 'Expandida': 'positive' },
+                    states: {
+                        'Sólida': 'Un hogar interno estable, un refugio seguro en ti mismo.',
+                        'En Ruinas': 'Un hogar interno roto, un sentimiento de familia fragmentada.',
+                        'En Construcción': 'Un hogar en reconstrucción, un proceso de sanación y crecimiento.',
+                        'Vacía': 'La soledad interna, la sensación de que falta algo en tu vida.',
+                        'Embrujada': 'Un hogar con traumas del pasado que persisten en el presente.',
+                        'Expandida': 'Un hogar en crecimiento, la sensación de que estás evolucionando y creando espacio para más.'
+                    },
+                    questions: {
+                        'positive': ['¿Qué te hace sentir seguro y estable?', '¿Cómo puedes nutrir tu hogar interno?', '¿Qué te hace sentir más conectado con tu equipo o familia?'],
+                        'negative': ['¿Qué sombras embrujan tu hogar interno?', '¿Cómo podrías empezar a reconstruir lo que está en ruinas?', '¿Qué te ayudará a limpiar ese espacio interior para que sea un lugar de paz?']
+                    },
+                    repaired: 'sólida, acogedora, rosa, caliente y mediana'
+                }
+            }
+        };
+
+        // Gestión de pacientes con localStorage
+        let patients = JSON.parse(localStorage.getItem('patients')) || [];
+        let currentPatientId = null;
+
+        function calculateAge(birthDate) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function renderPatients() {
+            const list = document.getElementById('patientList');
+            list.innerHTML = '';
+            patients.forEach(patient => {
+                const age = calculateAge(patient.birthDate);
+                let li = document.createElement('li');
+                li.className = 'list-item';
+                li.innerHTML = `
+                    <span class="flex-grow font-medium">${patient.name} ${patient.lastName} (${age} años) - Deporte: ${patient.sport}</span>
+                    <div class="flex gap-3">
+                        <button onclick="editPatient(${patient.id})" class="btn btn-primary text-sm tooltip" data-tip="Editar paciente"><i class="fas fa-edit mr-2"></i>Editar<span class="tooltip-text">Editar paciente</span></button>
+                        <button onclick="deletePatient(${patient.id})" class="btn btn-danger text-sm tooltip" data-tip="Eliminar paciente"><i class="fas fa-trash mr-2"></i>Eliminar<span class="tooltip-text">Eliminar paciente</span></button>
+                        <button onclick="showHistory(${patient.id})" class="btn btn-primary text-sm tooltip" data-tip="Ver historial"><i class="fas fa-history mr-2"></i>Historial<span class="tooltip-text">Ver historial</span></button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function savePatient() {
+            const id = document.getElementById('patientId').value || Date.now();
+            const patient = {
+                id: parseInt(id),
+                name: document.getElementById('name').value,
+                lastName: document.getElementById('lastName').value,
+                birthDate: document.getElementById('birthDate').value,
+                birthTime: document.getElementById('birthTime').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                sport: document.getElementById('sport').value,
+                sessions: patients.find(p => p.id === parseInt(id))?.sessions || []
+            };
+            if (document.getElementById('patientId').value) {
+                const index = patients.findIndex(p => p.id === parseInt(id));
+                patients[index] = patient;
+            } else {
+                patients.push(patient);
+            }
+            localStorage.setItem('patients', JSON.stringify(patients));
+            clearPatientForm();
+            renderPatients();
+        }
+
+        function editPatient(id) {
+            const patient = patients.find(p => p.id === id);
+            document.getElementById('patientId').value = patient.id;
+            document.getElementById('name').value = patient.name;
+            document.getElementById('lastName').value = patient.lastName;
+            document.getElementById('birthDate').value = patient.birthDate;
+            document.getElementById('birthTime').value = patient.birthTime;
+            document.getElementById('phone').value = patient.phone;
+            document.getElementById('email').value = patient.email;
+            document.getElementById('sport').value = patient.sport;
+        }
+
+        function deletePatient(id) {
+            if (confirm('¿Estás seguro de eliminar este paciente y todas sus sesiones?')) {
+                patients = patients.filter(p => p.id !== id);
+                localStorage.setItem('patients', JSON.stringify(patients));
+                renderPatients();
+                if (currentPatientId === id) {
+                    backToPatientList();
+                }
+            }
+        }
+
+        function clearPatientForm() {
+            document.getElementById('patientForm').reset();
+            document.getElementById('patientId').value = '';
+        }
+
+        function searchPatients() {
+            const search = document.getElementById('searchPatients').value.toLowerCase();
+            const list = document.getElementById('patientList');
+            Array.from(list.children).forEach(li => {
+                li.style.display = li.textContent.toLowerCase().includes(search) ? '' : 'none';
+            });
+        }
+
+        function showHistory(id) {
+            currentPatientId = id;
+            const patient = patients.find(p => p.id === id);
+            document.getElementById('historyPatientName').textContent = `${patient.name} ${patient.lastName}`;
+            renderHistorySessions(patient.sessions || []);
+            document.getElementById('new-patient').style.display = 'none';
+            document.getElementById('patientList').parentElement.style.display = 'none';
+            document.getElementById('sessionHistory').style.display = 'block';
+            document.getElementById('newSession').style.display = 'none';
+        }
+
+        function renderHistorySessions(sessions) {
+            const list = document.getElementById('historySessionList');
+            list.innerHTML = '';
+            sessions.forEach((session, index) => {
+                let li = document.createElement('li');
+                li.className = 'session-item';
+                li.innerHTML = `
+                    <span class="font-medium">Sesión ${index + 1} (${session.timestamp})</span>: ${session.object} ${session.state} (${session.substate}), ${session.color}, ${session.texture}, ${session.size} - Deporte: ${session.sport}
+                    ${session.externalAnalysis ? `<p class="text-sm text-gray-600 mt-2">Análisis Externo: ${session.externalAnalysis}</p>` : ''}
+                `;
+                list.appendChild(li);
+            });
+        }
+        
+        // Función de inicio de sesión actualizada
+        function startNewSession() {
+            const patient = patients.find(p => p.id === currentPatientId);
+            const sessionCount = patient.sessions.length;
+
+            if (sessionCount >= sessionOrder.length) {
+                alert('Este paciente ha completado las 10 sesiones. No se pueden iniciar más sesiones con este método.');
+                return;
+            }
+
+            const nextObject = sessionOrder[sessionCount];
+            document.getElementById('sessionPatientName').textContent = `${patient.name} ${patient.lastName}`;
+            document.getElementById('sessionForm').reset();
+            
+            const objectSelect = document.getElementById('object');
+            objectSelect.innerHTML = `<option value="${nextObject}">${nextObject}</option>`;
+            objectSelect.value = nextObject;
+            objectSelect.disabled = true;
+
+            updateStates();
+            
+            document.getElementById('color').value = '';
+            document.getElementById('texture').value = '';
+            document.getElementById('size').value = '';
+            document.getElementById('analysisResult').style.display = 'none';
+            document.getElementById('sessionHistory').style.display = 'none';
+            document.getElementById('newSession').style.display = 'block';
+        }
+
+        function backToHistory() {
+            const patient = patients.find(p => p.id === currentPatientId);
+            renderHistorySessions(patient.sessions || []);
+            document.getElementById('newSession').style.display = 'none';
+            document.getElementById('sessionHistory').style.display = 'block';
+        }
+
+        function backToPatientList() {
+            currentPatientId = null;
+            document.getElementById('sessionHistory').style.display = 'none';
+            document.getElementById('newSession').style.display = 'none';
+            document.getElementById('new-patient').style.display = 'block';
+            document.getElementById('patientList').parentElement.style.display = 'block';
+            renderPatients();
+        }
+
+        function updateStates() {
+            const obj = document.getElementById('object').value;
+            const stateSelect = document.getElementById('state');
+            stateSelect.innerHTML = '<option value="">Seleccione...</option>';
+            document.getElementById('substate').innerHTML = '<option value="">Seleccione...</option>';
+            if (obj && data.objects[obj]) {
+                for (let state in data.objects[obj].states) {
+                    let option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    stateSelect.appendChild(option);
+                }
+            }
+        }
+
+        function updateSubstates() {
+            const obj = document.getElementById('object').value;
+            const state = document.getElementById('state').value;
+            const substateSelect = document.getElementById('substate');
+            substateSelect.innerHTML = '<option value="">Seleccione...</option>';
+            if (obj && state && data.objects[obj].states[state]) {
+                data.objects[obj].states[state].forEach(substate => {
+                    let option = document.createElement('option');
+                    option.value = substate;
+                    option.textContent = substate;
+                    substateSelect.appendChild(option);
+                });
+            }
+        }
+        
+        // Nueva función generateAnalysis con los cambios propuestos
+        function generateAnalysis() {
+            const patient = patients.find(p => p.id === currentPatientId);
+            const obj = document.getElementById('object').value;
+            const state = document.getElementById('state').value;
+            const substate = document.getElementById('substate').value;
+            const color = document.getElementById('color').value;
+            const texture = document.getElementById('texture').value;
+            const size = document.getElementById('size').value;
+            const sport = patient.sport;
+            const age = calculateAge(patient.birthDate);
+
+            if (!obj || !state || !substate || !color || !texture || !size) {
+                alert('Completa todos los campos para generar el análisis.');
+                return;
+            }
+
+            const objSim = simbolismos.objects[obj] || { principal: '', states: {}, substates: {}, questions: { positive: [], negative: [] }, repaired: '' };
+            const stateSim = objSim.states[state] || '';
+            const colorSim = simbolismos.colors[color].text;
+            const textureSim = simbolismos.textures[texture].text;
+            const sizeSim = simbolismos.sizes[size].text;
+
+            // Bloque 1: Análisis Personal (enfoque Junguiano)
+            const analysisPersonal = `
+                ### 1. Análisis del Inconsciente y el Yo
+                
+                La visualización del **${obj} ${state} (${substate})** se manifiesta como una poderosa representación simbólica de tu **sombra** y el estado actual de tu **psique**. Desde una perspectiva junguiana, el **${obj}** simboliza tu **${objSim.principal}**, un pilar fundamental de tu ser.
+                
+                El estado **${state} (${stateSim})** revela un **bloqueo o conflicto** profundo en esta área de tu vida, quizás un aspecto de ti mismo que necesita ser reconocido e integrado. El **color ${color}** (${colorSim}), junto a la **textura ${texture}** (${textureSim}) y el **tamaño ${size}** (${sizeSim}), no son casualidad; son la manifestación de una energía reprimida o un trauma no procesado que clama por atención.
+            `;
+
+            // Bloque 2: Análisis Deportivo (enfoque en el crecimiento)
+            const analysisDeportivo = `
+                ### 2. El Obstáculo como Oportunidad de Crecimiento en el Deporte
+
+                El obstáculo que representa este símbolo no es un fin, sino el inicio de tu **viaje de héroe** como deportista. La visualización del **${obj} ${state}** en el contexto de tu deporte, el **${sport}**, nos muestra que esta dificultad tiene un propósito: te está forzando a mirar hacia adentro, a fortalecer tu **resiliencia mental** y a encontrar un nuevo nivel de rendimiento.
+
+                El trauma o la presión asociada a este símbolo es el **crisol** que te permite forjar una nueva identidad más fuerte. Aceptar y trabajar con esta visualización es el primer paso para transformar lo que percibes como un fallo en la **fuente de tu mayor fortaleza**.
+            `;
+            
+            // Preguntas y visualización reparada
+            const visualizationType = objSim.type[state] || 'neutral';
+            const questions = visualizationType === 'positive' ? objSim.questions.positive : objSim.questions.negative;
+            const repaired = `Ahora, visualiza ese mismo **${obj}** transformado en una versión **${objSim.repaired}**. Este es un **símbolo de tu sanación**: un recordatorio de que el trauma no solo se libera, sino que se repara y se convierte en una base sólida para tu futuro.`;
+
+            // Mensaje para el chat externo (mejorado)
+            const message = `
+                Por favor, genera un análisis psicológico detallado para un paciente de ${age} años que visualiza un símbolo de su inconsciente.
+
+                **Datos Clave:**
+                - **Símbolo Visualizado:** ${obj} ${state} (${substate})
+                - **Atributos:** Color ${color}, Textura ${texture}, Tamaño ${size}
+                - **Contexto del Paciente:** Deportista de ${sport}
+
+                **Instrucciones para la Respuesta:**
+                1.  **Análisis Personal y Junguiano:** Interpreta la visualización desde la perspectiva de la **${objSim.principal}** y el trauma. Conecta el símbolo a conceptos como el **arquetipo del Yo**, la **sombra** y el **viaje de sanación**. Explica qué revela cada atributo (color, textura, tamaño) sobre el estado emocional y la psique del paciente.
+                2.  **Análisis Deportivo y Oportunidad de Crecimiento:** Vincula el trauma a su práctica deportiva. Explica cómo este obstáculo puede ser una oportunidad para un crecimiento profundo, mejorando la **resiliencia** y el **rendimiento**. Utiliza principios de la psicología deportiva para guiar al paciente a ver el fracaso o la dificultad como parte integral del **viaje del héroe** deportivo.
+                3.  **Preguntas de Guía:** Formula 3-5 preguntas poderosas y abiertas, inspiradas en la terapia junguiana y la psicología del deporte, que guíen al paciente a reflexionar, a reconocer el obstáculo y a usarlo como una oportunidad de crecimiento.
+                4.  **Visualización Reparadora:** Describe una visualización poderosa del símbolo en su forma reparada y sana, y explica por qué esta nueva imagen es crucial para la integración del trauma y la sanación.
+            `;
+
+            document.getElementById('analysisText').innerHTML = `
+                ${analysisPersonal}
+                <br>
+                ${analysisDeportivo}
+            `;
+            
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '';
+            questions.forEach(q => {
+                const li = document.createElement('li');
+                li.className = 'text-gray-700';
+                li.textContent = q;
+                questionsList.appendChild(li);
+            });
+
+            document.getElementById('repairedVisualization').textContent = repaired;
+            document.getElementById('messageText').value = message;
+
+            // Copiar automáticamente al clipboard y mostrar toast
+            navigator.clipboard.writeText(message).then(() => {
+                showToast('Mensaje copiado al portapapeles');
+                // Abrir nuevo chat (ej. Grok)
+                window.open('https://grok.x.ai/', '_blank');
+            }).catch(err => {
+                showToast('Error al copiar el mensaje. Por favor, cópialo manualmente desde el textarea.', true);
+                console.error('Error al copiar: ', err);
+            });
+
+            document.getElementById('analysisResult').style.display = 'block';
+        }
+
+        function saveSession() {
+            const patient = patients.find(p => p.id === currentPatientId);
+            const obj = document.getElementById('object').value;
+            const state = document.getElementById('state').value;
+            const substate = document.getElementById('substate').value;
+            const color = document.getElementById('color').value;
+            const texture = document.getElementById('texture').value;
+            const size = document.getElementById('size').value;
+            const sport = patient.sport;
+
+            if (!obj || !state || !substate || !color || !texture || !size) {
+                alert('Completa todos los campos para guardar la sesión.');
+                return;
+            }
+
+            const newSession = {
+                object: obj,
+                state: state,
+                substate: substate,
+                color: color,
+                texture: texture,
+                size: size,
+                sport: sport,
+                timestamp: new Date().toLocaleString(),
+                externalAnalysis: ''
+            };
+            patient.sessions = patient.sessions || [];
+            patient.sessions.push(newSession);
+            localStorage.setItem('patients', JSON.stringify(patients));
+            alert('Sesión guardada exitosamente.');
+            backToHistory();
+        }
+
+        function saveExternalAnalysis() {
+            const patient = patients.find(p => p.id === currentPatientId);
+            const externalText = document.getElementById('externalAnalysis').value;
+            if (externalText && patient.sessions.length > 0) {
+                patient.sessions[patient.sessions.length - 1].externalAnalysis = externalText;
+                localStorage.setItem('patients', JSON.stringify(patients));
+                alert('Análisis externo guardado en la sesión.');
+                document.getElementById('externalAnalysis').value = '';
+                backToHistory();
+            } else {
+                alert('No hay sesión reciente o texto para guardar.');
+            }
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.remove('error');
+            if (isError) {
+                toast.classList.add('error');
+            }
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function exportToExcel() {
+            const wb = XLSX.utils.book_new();
+            const wsData = [["Nombre", "Apellidos", "Edad", "Fecha Nacimiento", "Hora Nacimiento", "Teléfono", "Email", "Deporte", "Objeto", "Estado", "Subestado", "Color", "Textura", "Tamaño", "Deporte Sesión", "Fecha Sesión", "Análisis Externo"]];
+
+            patients.forEach(patient => {
+                const age = calculateAge(patient.birthDate);
+                if (patient.sessions && patient.sessions.length > 0) {
+                    patient.sessions.forEach(session => {
+                        wsData.push([
+                            patient.name,
+                            patient.lastName,
+                            age,
+                            patient.birthDate,
+                            patient.birthTime,
+                            patient.phone,
+                            patient.email,
+                            patient.sport,
+                            session.object,
+                            session.state,
+                            session.substate,
+                            session.color,
+                            session.texture,
+                            session.size,
+                            session.sport,
+                            session.timestamp,
+                            session.externalAnalysis || ''
+                        ]);
+                    });
+                } else {
+                    wsData.push([
+                        patient.name,
+                        patient.lastName,
+                        age,
+                        patient.birthDate,
+                        patient.birthTime,
+                        patient.phone,
+                        patient.email,
+                        patient.sport,
+                        "", "", "", "", "", "", "", "", ""
+                    ]);
+                }
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, "Pacientes y Sesiones");
+            XLSX.writeFile(wb, 'sesiones_traumas.xlsx');
+        }
+
+        // Inicializar
+        renderPatients();
+    </script>
+</body>
+</html>
